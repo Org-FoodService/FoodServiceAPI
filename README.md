@@ -4,7 +4,7 @@ The FoodServiceAPI repository is an API designed for snack bars, facilitating th
 
 ## Overview
 
-This project aims to enhance snack bar operations by providing functionalities for menu creation, inventory management, and potential delivery integration. The use of ASP.NET MVC architecture ensures a structured approach to application development, promoting modularity and maintainability.
+This project aims to enhance snack bar operations by providing functionalities for menu creation, inventory management, and potential delivery integration. 
 
 ## Demo Application
 
