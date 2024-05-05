@@ -1,16 +1,16 @@
-name: Build and deploy .NET Core application to Web App FoodServiceApi20240505093241 with API Management Service FoodServiceApi-FoodServiceApi
+name: Build and deploy .NET Core application to Web App FoodService-Api with API Management Service FoodService-Api-FoodService-Api
 on:
   push:
     branches:
     - main
 env:
-  AZURE_WEBAPP_NAME: FoodServiceApi20240505093241
+  AZURE_WEBAPP_NAME: FoodService-Api
   AZURE_WEBAPP_PACKAGE_PATH: FoodService.Api\publish
   AZURE_APIM_RESOURCE_PATH: /
   AZURE_APIM_RESOURCEGROUP: food-service-webapp_group
-  AZURE_APIM_SERVICENAME: FoodServiceApi
-  AZURE_APIM_API_ID: FoodServiceApi
-  AZURE_APIM_APPSERVICEURL: https://foodserviceapi20240505093241.azurewebsites.net
+  AZURE_APIM_SERVICENAME: FoodService-Api
+  AZURE_APIM_API_ID: FoodService-Api
+  AZURE_APIM_APPSERVICEURL: https://foodservice-api.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
   SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
   API_IMPORT_SPECIFICATION_PATH: FoodService.Api\publish\swagger.json
@@ -64,11 +64,11 @@ jobs:
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.FoodServiceApi20240505093241_8F7B }}
+        publish-profile: ${{ secrets.FoodService_Api_16B8 }}
     - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.FoodServiceApi_SPN }}
+        creds: ${{ secrets.FoodService_Api_SPN }}
     - name: Import API into Azure API Management
       run: az apim api import --path "${{ env.AZURE_APIM_RESOURCE_PATH }}" --resource-group "${{ env.AZURE_APIM_RESOURCEGROUP }}" --service-name "${{ env.AZURE_APIM_SERVICENAME }}" --api-id "${{ env.AZURE_APIM_API_ID }}" --service-url "${{ env.AZURE_APIM_APPSERVICEURL }}" --specification-path "${{ env.API_IMPORT_SPECIFICATION_PATH }}" --specification-format OpenApi --subscription-required false
     - name: logout
