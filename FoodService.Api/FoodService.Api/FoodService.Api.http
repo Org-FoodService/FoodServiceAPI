@@ -1,0 +1,6 @@
+@FoodService.Api_HostAddress = https://foodserviceapi20240505093241.azurewebsites.net/
+
+GET {{FoodService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
