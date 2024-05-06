@@ -1,5 +1,5 @@
 ﻿using FoodService.Core.Interface.Command;
-using FoodService.Nugget.Models;
+using FoodService.Nuget.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

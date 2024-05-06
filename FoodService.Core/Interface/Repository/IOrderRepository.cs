@@ -1,5 +1,5 @@
 ﻿using FoodService.Core.Interface.Repository.Generic;
-using FoodService.Nugget.Models;
+using FoodService.Nuget.Models;
 
 namespace FoodService.Core.Interface.Repository
 {

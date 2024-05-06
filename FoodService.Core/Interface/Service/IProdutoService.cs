@@ -1,4 +1,4 @@
-﻿using FoodService.Nugget.Models;
+﻿using FoodService.Nuget.Models;
 
 namespace FoodService.Core.Interface.Service
 {

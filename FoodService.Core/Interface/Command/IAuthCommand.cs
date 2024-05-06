@@ -1,6 +1,6 @@
 ﻿using FoodService.Core.Dto;
-using FoodService.Nugget.Models;
-using FoodService.Nugget.Models.Auth.User;
+using FoodService.Nuget.Models;
+using FoodService.Nuget.Models.Auth.User;
 
 namespace FoodService.Core.Interface.Command
 {

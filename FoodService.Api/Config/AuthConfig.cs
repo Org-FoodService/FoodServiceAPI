@@ -1,4 +1,4 @@
-﻿using FoodService.Nugget.Models.Auth.Role;
+﻿using FoodService.Nuget.Models.Auth.Role;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

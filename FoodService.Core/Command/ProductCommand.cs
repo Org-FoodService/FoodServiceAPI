@@ -1,6 +1,6 @@
 ﻿using FoodService.Core.Interface.Command;
 using FoodService.Core.Interface.Service;
-using FoodService.Nugget.Models;
+using FoodService.Nuget.Models;
 
 namespace FoodService.Core.Command
 {

@@ -1,6 +1,6 @@
 ﻿using FoodService.Core.Interface.Repository;
 using FoodService.Core.Interface.Service;
-using FoodService.Nugget.Models;
+using FoodService.Nuget.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodService.Core.Service

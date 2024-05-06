@@ -1,7 +1,7 @@
 ﻿using FoodService.Data.Context;
 using FoodService.Core.Repository.Generic;
 using FoodService.Core.Interface.Repository;
-using FoodService.Nugget.Models;
+using FoodService.Nuget.Models;
 
 namespace FoodService.Core.Repository
 {

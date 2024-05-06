@@ -1,6 +1,6 @@
-# FoodServiceAPI
+# FoodService
 
-The FoodServiceAPI repository is an API designed for snack bars, facilitating the management of menus, inventory, and employee information. Leveraging the capabilities of .NET 8.0, this application serves as a centralized platform to streamline snack bar operations.
+The FoodService is a service designed for snack bars, facilitating the management of menus, inventory, and employee information. Leveraging the capabilities of .NET 8.0, this application serves as a centralized platform to streamline snack bar operations.
 
 ## Overview
 

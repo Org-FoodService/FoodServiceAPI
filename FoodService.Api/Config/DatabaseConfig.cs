@@ -1,6 +1,6 @@
 ﻿using FoodService.Data.Context;
-using FoodService.Nugget.Models.Auth.Role;
-using FoodService.Nugget.Models.Auth.User;
+using FoodService.Nuget.Models.Auth.Role;
+using FoodService.Nuget.Models.Auth.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

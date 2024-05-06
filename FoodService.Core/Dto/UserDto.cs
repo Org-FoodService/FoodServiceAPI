@@ -1,4 +1,4 @@
-﻿using FoodService.Nugget.Models.Auth.User;
+﻿using FoodService.Nuget.Models.Auth.User;
 
 namespace FoodService.Core.Dto
 {
