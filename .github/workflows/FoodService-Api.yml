@@ -48,17 +48,6 @@ jobs:
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3
       with:
-
-    
-          
-            
-    
-
-          
-          Expand Down
-    
-    
-  
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
   deploy:
