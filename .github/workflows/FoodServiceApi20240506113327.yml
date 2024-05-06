@@ -22,7 +22,7 @@ jobs:
     - name: Restore
       run: |
         dotnet restore "${{ env.WORKING_DIRECTORY }}"
-        dotnet add "${{ env.WORKING_DIRECTORY }}" package FoodService.Nugget.Models --version "{{ env.FOOD_SERVICE_MODELS_VERSION }}"
+        dotnet add "${{ env.WORKING_DIRECTORY }}" package FoodService.Nugget.Models --version "${{ env.FOOD_SERVICE_MODELS_VERSION }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
