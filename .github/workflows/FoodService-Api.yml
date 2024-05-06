@@ -14,7 +14,7 @@ env:
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
   SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
   API_IMPORT_SPECIFICATION_PATH: FoodService.Api\publish\swagger.json
-  API_IMPORT_DLL: FoodService.Api\bin\Release\net8.0\FoodService.Api.dll
+  API_IMPORT_DLL: FoodService.Api\publish\FoodService.Api.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
