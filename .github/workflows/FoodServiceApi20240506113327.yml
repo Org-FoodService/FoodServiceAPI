@@ -9,6 +9,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: FoodService.Api
+  FOOD_SERVICE_MODELS_VERSION: 0.0.2
 jobs:
   build:
     runs-on: windows-latest
@@ -21,7 +22,7 @@ jobs:
     - name: Restore
       run: |
         dotnet restore "${{ env.WORKING_DIRECTORY }}"
-        dotnet add "${{ env.WORKING_DIRECTORY }}" package FoodService.Nugget.Models
+        dotnet add "${{ env.WORKING_DIRECTORY }}" package FoodService.Nugget.Models --version "{{ env.FOOD_SERVICE_MODELS_VERSION }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
