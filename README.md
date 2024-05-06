@@ -16,8 +16,6 @@ For more detailed information, please refer to our [wiki](https://foodservice.gi
 
 ## Dependencies
 
-## Dependencies
-
 | Dependency                                                                                                                    | Version |
 |-------------------------------------------------------------------------------------------------------------------------------|---------|
 | MySQL                                                                                                                         | 8.0     |
