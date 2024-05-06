@@ -2,7 +2,7 @@ name: Build and deploy .NET Core application to Web App FoodServiceApi2024050611
 on:
   push:
     branches:
-      - develop
+      - main
 env:
   AZURE_WEBAPP_NAME: FoodServiceApi20240506113327
   AZURE_WEBAPP_PACKAGE_PATH: FoodService.Api\publish
