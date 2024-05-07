@@ -63,22 +63,23 @@ namespace FoodServiceAPI.Data.Context
         {
             // Add initial data for Ingredients
             modelBuilder.Entity<Ingredient>().HasData(
-                new Ingredient { Id = 1, Name = "Tomato", Description = "Fresh tomato", StockQuantity = 100, IsFresh = true, ExpirationDate = DateTime.Now.AddDays(7) },
-                new Ingredient { Id = 2, Name = "Lettuce", Description = "Crispy lettuce", StockQuantity = 50, IsFresh = true, ExpirationDate = DateTime.Now.AddDays(5) },
-                new Ingredient { Id = 3, Name = "Chicken Breast", Description = "Boneless chicken breast", StockQuantity = 30, IsFresh = true, ExpirationDate = DateTime.Now.AddDays(3) },
-                new Ingredient { Id = 4, Name = "Cheese", Description = "Cheddar cheese", StockQuantity = 40, IsFresh = true, ExpirationDate = DateTime.Now.AddDays(10) },
-                new Ingredient { Id = 5, Name = "Onion", Description = "Fresh onion", StockQuantity = 60, IsFresh = true, ExpirationDate = DateTime.Now.AddDays(7) },
-                new Ingredient { Id = 6, Name = "Lemon", Description = "Fresh lemon", StockQuantity = 30, IsFresh = true, ExpirationDate = DateTime.Now.AddDays(10) }
+                new Ingredient { Id = 1, Name = "Tomato", Description = "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.", StockQuantity = 100, ShortDescription = "Fresh Tomato", IsFresh = true, ExpirationDate = DateTime.Now.AddDays(7) },
+                new Ingredient { Id = 2, Name = "Lettuce", Description = "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.", StockQuantity = 50, ShortDescription = "Crisp Lettuce", IsFresh = true, ExpirationDate = DateTime.Now.AddDays(5) },
+                new Ingredient { Id = 3, Name = "Chicken Breast", Description = "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.", StockQuantity = 30, ShortDescription = "Boneless Chicken Breast", IsFresh = true, ExpirationDate = DateTime.Now.AddDays(3) },
+                new Ingredient { Id = 4, Name = "Cheese", Description = "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.", StockQuantity = 40, ShortDescription = "Aged Cheddar Cheese", IsFresh = true, ExpirationDate = DateTime.Now.AddDays(10) },
+                new Ingredient { Id = 5, Name = "Onion", Description = "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.", StockQuantity = 60, ShortDescription = "Fresh Onion", IsFresh = true, ExpirationDate = DateTime.Now.AddDays(7) },
+                new Ingredient { Id = 6, Name = "Lemon", Description = "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.", StockQuantity = 30, ShortDescription = "Fresh Lemon", IsFresh = true, ExpirationDate = DateTime.Now.AddDays(10) }
             );
 
             // Add initial data for Products
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "Tomato Soup", Description = "Delicious tomato soup", Price = 5.99m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Chef's Special" },
-                new Product { Id = 2, Name = "Chicken Salad", Description = "Healthy chicken salad", Price = 8.49m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Healthy Kitchen" },
-                new Product { Id = 3, Name = "Lemonade", Description = "Refreshing lemonade", Price = 2.99m, Active = true, Type = ProductTypeEnum.Beverage, Brand = "Fresh Drinks" },
-                new Product { Id = 4, Name = "Cheeseburger", Description = "Classic cheeseburger", Price = 7.99m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Burger House" },
-                new Product { Id = 5, Name = "Onion Rings", Description = "Crispy onion rings", Price = 3.49m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Snack Corner" }
+                new Product { Id = 1, Name = "Tomato Soup", Description = "Our tomato soup is made with the finest fresh tomatoes, seasoned with herbs and spices for a rich, comforting flavor.", ShortDescription = "Delicious tomato soup", Price = 5.99m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Chef's Special" },
+                new Product { Id = 2, Name = "Chicken Salad", Description = "Our chicken salad is healthy and delicious, featuring tender chicken breast, crisp lettuce, and fresh vegetables, tossed in a tangy dressing.", ShortDescription = "Healthy chicken salad", Price = 8.49m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Healthy Kitchen" },
+                new Product { Id = 3, Name = "Lemonade", Description = "Our lemonade is made with freshly squeezed lemons, pure cane sugar, and filtered water, creating a refreshing beverage that's perfect for any occasion.", ShortDescription = "Refreshing lemonade", Price = 2.99m, Active = true, Type = ProductTypeEnum.Beverage, Brand = "Fresh Drinks" },
+                new Product { Id = 4, Name = "Cheeseburger", Description = "Our classic cheeseburger features a juicy beef patty, melted cheddar cheese, crisp lettuce, ripe tomatoes, onions, and pickles, all served on a toasted bun.", ShortDescription = "Classic cheeseburger", Price = 7.99m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Burger House" },
+                new Product { Id = 5, Name = "Onion Rings", Description = "Our crispy onion rings are made with fresh onions, coated in a seasoned batter, and fried to golden perfection, creating a delicious side dish or snack.", ShortDescription = "Crispy onion rings", Price = 3.49m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Snack Corner" }
             );
+
 
             // Add initial data for the junction entity ProductIngredient
             modelBuilder.Entity<ProductIngredient>().HasData(
