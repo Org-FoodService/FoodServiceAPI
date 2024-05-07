@@ -1,6 +1,6 @@
-# FoodServiceAPI
+# FoodService
 
-The FoodServiceAPI repository is an API designed for snack bars, facilitating the management of menus, inventory, and employee information. Leveraging the capabilities of .NET 8.0, this application serves as a centralized platform to streamline snack bar operations.
+The FoodService is a service designed for snack bars, facilitating the management of menus, inventory, and employee information. Leveraging the capabilities of .NET 8.0, this application serves as a centralized platform to streamline snack bar operations.
 
 ## Overview
 
@@ -8,7 +8,7 @@ This project aims to enhance snack bar operations by providing functionalities f
 
 ## Demo Application
 
-Explore our [demo application](https://foodservice-api.azurewebsites.net/) to experience the features of DotNetMVCFoodService firsthand.
+Explore our [front-end web application](https://foodservice-api.azurewebsites.net/) and [API Swagger documentation](https://foodserviceapi20240506113327.azurewebsites.net/swagger/index.html) to experience the features of FoodService firsthand.
 
 ## Documentation
 
@@ -16,9 +16,11 @@ For more detailed information, please refer to our [wiki](https://foodservice.gi
 
 ## Dependencies
 
-| Dependency | Version |
-|------------|---------|
-| MySQL      | 8.0     |
-| .NET       | 8.0     |
+| Dependency                                                                                                                    | Version |
+|-------------------------------------------------------------------------------------------------------------------------------|---------|
+| MySQL                                                                                                                         | 8.0     |
+| .NET                                                                                                                          | 8.0     |
+| [FoodService.Models](https://github.com/Org-FoodService/FoodService.Models/pkgs/nuget/FoodService.Models)         | 1.0.0   |
 
-Feel free to contribute to the project and help us improve snack bar operations with FoodServiceAPI!
+
+Feel free to contribute to the project and help us improve snack bar operations with FoodService!

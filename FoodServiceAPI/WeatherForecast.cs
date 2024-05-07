@@ -1,4 +1,4 @@
-namespace FoodService.Api
+namespace FoodServiceAPI
 {
     public class WeatherForecast
     {

@@ -1,6 +1,7 @@
+using FoodServiceAPI;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FoodService.Api.Controllers
+namespace FoodServiceAPI.Controllers
 {
     [ApiController]
     [Route("/")]
