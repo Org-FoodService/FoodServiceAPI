@@ -18,7 +18,6 @@ namespace FoodService.Config
         /// <param name="builder">The web application builder.</param>
         public static void ConfigureAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
         {
-            Console.WriteLine(builder.Configuration["ValidIssuer"]);
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

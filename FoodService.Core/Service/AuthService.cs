@@ -276,17 +276,18 @@ namespace FoodService.Core.Service
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
+                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Secret"]!));
+                var expiresTime = DateTime.UtcNow.AddHours(3);
 
                 var token = new JwtSecurityToken(
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.UtcNow.AddHours(3),
+                    issuer: _configuration["ValidIssuer"],
+                    audience: _configuration["ValidAudience"],
+                    expires: expiresTime,
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
 
-                return new SsoDto(new JwtSecurityTokenHandler().WriteToken(token), user);
+                return new SsoDto(new JwtSecurityTokenHandler().WriteToken(token), user, expiresTime);
             }
             catch (Exception ex)
             {
