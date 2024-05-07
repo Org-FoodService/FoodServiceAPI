@@ -16,13 +16,11 @@ For more detailed information, please refer to our [wiki](https://foodservice.gi
 
 ## Dependencies
 
-## Dependencies
-
 | Dependency                                                                                                                    | Version |
 |-------------------------------------------------------------------------------------------------------------------------------|---------|
 | MySQL                                                                                                                         | 8.0     |
 | .NET                                                                                                                          | 8.0     |
-| [FoodService.Nuget.Models](https://github.com/Org-FoodService/FoodService.Nuget.Models/pkgs/nuget/FoodService.Nuget.Models)   | 0.0.2   |
+| [FoodService.Nuget.Models](https://github.com/Org-FoodService/FoodService.Nuget.Models/pkgs/nuget/FoodService.Nuget.Models)   | 1.0.1   |
 
 
 Feel free to contribute to the project and help us improve snack bar operations with FoodServiceAPI!
