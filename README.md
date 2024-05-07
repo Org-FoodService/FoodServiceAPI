@@ -20,7 +20,7 @@ For more detailed information, please refer to our [wiki](https://foodservice.gi
 |-------------------------------------------------------------------------------------------------------------------------------|---------|
 | MySQL                                                                                                                         | 8.0     |
 | .NET                                                                                                                          | 8.0     |
-| [FoodService.Nuget.Models](https://github.com/Org-FoodService/FoodService.Nuget.Models/pkgs/nuget/FoodService.Nuget.Models)   | 1.0.1   |
+| [FoodService.Nuget.Models](https://github.com/Org-FoodService/FoodService.Nuget.Models/pkgs/nuget/FoodService.Models)         | 1.0.0   |
 
 
-Feel free to contribute to the project and help us improve snack bar operations with FoodServiceAPI!
+Feel free to contribute to the project and help us improve snack bar operations with FoodService!
