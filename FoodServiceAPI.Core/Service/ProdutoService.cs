@@ -1,4 +1,4 @@
-﻿using FoodService.Models;
+﻿using FoodService.Models.Entities;
 using FoodServiceAPI.Core.Interface.Repository;
 using FoodServiceAPI.Core.Interface.Service;
 using Microsoft.EntityFrameworkCore;

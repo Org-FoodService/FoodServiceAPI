@@ -1,6 +1,6 @@
-﻿using FoodService.Models;
-using FoodService.Models.Auth.User;
+﻿using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
+using FoodService.Models.Responses;
 using FoodServiceAPI.Core.Interface.Command;
 using FoodServiceAPI.Core.Interface.Service;
 using Microsoft.AspNetCore.Authorization;

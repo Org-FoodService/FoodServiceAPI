@@ -1,14 +1,13 @@
 ﻿using FoodServiceAPI.Core.Interface.Command;
-using FoodService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using FoodService.Models.Entities;
 
 namespace FoodServiceAPI.Controllers
 {
     /// <summary>
     /// Controller for managing product operations.
     /// </summary>
-    ///     [Authorize]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -40,12 +39,12 @@ namespace FoodServiceAPI.Controllers
             if (response.IsSuccess)
             {
                 _logger.LogInformation("Successfully fetched all products");
-                return Ok(response.Data);
+                return Ok(response);
             }
             else
             {
                 _logger.LogError($"Failed to fetch all products: {response.Message}");
-                return StatusCode(response.StatusCode, response.Message);
+                return StatusCode(response.StatusCode, response);
             }
         }
 
@@ -62,12 +61,12 @@ namespace FoodServiceAPI.Controllers
             if (response.IsSuccess)
             {
                 _logger.LogInformation($"Successfully fetched product with ID: {id}");
-                return Ok(response.Data);
+                return Ok(response);
             }
             else
             {
                 _logger.LogError($"Failed to fetch product with ID: {id}, Error: {response.Message}");
-                return StatusCode(response.StatusCode, response.Message);
+                return StatusCode(response.StatusCode, response);
             }
         }
 
@@ -83,12 +82,12 @@ namespace FoodServiceAPI.Controllers
             if (response.IsSuccess)
             {
                 _logger.LogInformation($"Product created successfully with ID: {response.Data.Id}");
-                return CreatedAtAction(nameof(GetProductById), new { id = response.Data.Id }, response.Data);
+                return CreatedAtAction(nameof(GetProductById), new { id = response.Data.Id }, response);
             }
             else
             {
                 _logger.LogError($"Failed to create product, Error: {response.Message}");
-                return StatusCode(response.StatusCode, response.Message);
+                return StatusCode(response.StatusCode, response);
             }
         }
 
@@ -105,12 +104,12 @@ namespace FoodServiceAPI.Controllers
             if (response.IsSuccess)
             {
                 _logger.LogInformation($"Product with ID: {id} updated successfully");
-                return Ok(response.Data);
+                return Ok(response);
             }
             else
             {
                 _logger.LogError($"Failed to update product with ID: {id}, Error: {response.Message}");
-                return StatusCode(response.StatusCode, response.Message);
+                return StatusCode(response.StatusCode, response);
             }
         }
 
@@ -131,7 +130,7 @@ namespace FoodServiceAPI.Controllers
             else
             {
                 _logger.LogError($"Failed to delete product with ID: {id}, Error: {response.Message}");
-                return StatusCode(response.StatusCode, response.Message);
+                return StatusCode(response.StatusCode, response);
             }
         }
     }

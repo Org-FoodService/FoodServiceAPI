@@ -144,14 +144,14 @@ namespace FoodServiceAPI.Controllers
         /// <param name="id">The ID of the user to retrieve.</param>
         /// <returns>The user DTO.</returns>
         [HttpGet("get-userdto")]
-        public async Task<ActionResult> GetUserDTO([FromQuery] int id)
+        public async Task<ActionResult> GetUserDto([FromQuery] int id)
         {
             try
             {
                 _logger.LogInformation($"Attempting to get user with ID: {id}...");
-                var user = await _authCommand.GetUserDto(id);
+                var userDto = await _authCommand.GetUserDto(id);
                 _logger.LogInformation($"User with ID: {id} retrieved successfully.");
-                return Ok(user);
+                return Ok(userDto);
             }
             catch (Exception ex)
             {

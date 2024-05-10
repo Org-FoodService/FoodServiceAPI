@@ -1,7 +1,7 @@
-﻿using FoodService.Models;
-using FoodServiceAPI.Core.Repository.Generic;
+﻿using FoodServiceAPI.Core.Repository.Generic;
 using FoodServiceAPI.Core.Interface.Repository;
 using FoodServiceAPI.Data.Context;
+using FoodService.Models.Entities;
 
 namespace FoodServiceAPI.Core.Repository
 {

@@ -1,6 +1,6 @@
-﻿using FoodService.Models;
-using FoodService.Models.Auth.Role;
+﻿using FoodService.Models.Auth.Role;
 using FoodService.Models.Auth.User;
+using FoodService.Models.Entities;
 using FoodService.Models.Enum;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -95,7 +95,6 @@ namespace FoodServiceAPI.Data.Context
                 new ProductIngredient { ProductId = 5, IngredientId = 5 }   // Product: Onion Rings       Ingredient: Onion
             );
         }
-
 
         /// <summary>
         /// Represents the client users in the database.
