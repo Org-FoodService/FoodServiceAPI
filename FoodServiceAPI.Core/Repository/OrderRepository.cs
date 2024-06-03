@@ -1,13 +1,10 @@
-﻿using FoodServiceAPI.Core.Repository.Generic;
+﻿using FoodService.Models.Entities;
 using FoodServiceAPI.Core.Interface.Repository;
+using FoodServiceAPI.Core.Repository.Generic;
 using FoodServiceAPI.Data.Context;
-using FoodService.Models.Entities;
 
 namespace FoodServiceAPI.Core.Repository
 {
-    /// <summary>
-    /// Repository implementation for orders.
-    /// </summary>
     public class OrderRepository : GenericRepository<Order, int>, IOrderRepository
     {
 

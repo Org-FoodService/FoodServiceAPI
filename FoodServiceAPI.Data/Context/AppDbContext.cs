@@ -133,5 +133,10 @@ namespace FoodServiceAPI.Data.Context
         /// Represents the orders in the database.
         /// </summary>
         public DbSet<Order> Order { get; set; }
+
+        /// <summary>
+        /// Represents the orders in the database.
+        /// </summary>
+        public DbSet<Table> Tables { get; set; }
     }
 }
