@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FoodService.Data.Migrations
+namespace FoodServiceAPI.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -146,7 +146,7 @@ namespace FoodService.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("FoodService.Models.Ingredient", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.Ingredient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,8 +161,9 @@ namespace FoodService.Data.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("longblob");
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsFresh")
                         .HasColumnType("tinyint(1)");
@@ -187,7 +188,8 @@ namespace FoodService.Data.Migrations
                         {
                             Id = 1,
                             Description = "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.",
-                            ExpirationDate = new DateTime(2024, 5, 14, 14, 31, 26, 37, DateTimeKind.Local).AddTicks(9313),
+                            ExpirationDate = new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(557),
+                            Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Tomato",
                             ShortDescription = "Fresh Tomato",
@@ -197,7 +199,8 @@ namespace FoodService.Data.Migrations
                         {
                             Id = 2,
                             Description = "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.",
-                            ExpirationDate = new DateTime(2024, 5, 12, 14, 31, 26, 37, DateTimeKind.Local).AddTicks(9340),
+                            ExpirationDate = new DateTime(2024, 6, 8, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(580),
+                            Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lettuce",
                             ShortDescription = "Crisp Lettuce",
@@ -207,7 +210,8 @@ namespace FoodService.Data.Migrations
                         {
                             Id = 3,
                             Description = "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.",
-                            ExpirationDate = new DateTime(2024, 5, 10, 14, 31, 26, 37, DateTimeKind.Local).AddTicks(9343),
+                            ExpirationDate = new DateTime(2024, 6, 6, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(582),
+                            Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Chicken Breast",
                             ShortDescription = "Boneless Chicken Breast",
@@ -217,7 +221,8 @@ namespace FoodService.Data.Migrations
                         {
                             Id = 4,
                             Description = "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.",
-                            ExpirationDate = new DateTime(2024, 5, 17, 14, 31, 26, 37, DateTimeKind.Local).AddTicks(9345),
+                            ExpirationDate = new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(584),
+                            Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Cheese",
                             ShortDescription = "Aged Cheddar Cheese",
@@ -227,7 +232,8 @@ namespace FoodService.Data.Migrations
                         {
                             Id = 5,
                             Description = "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.",
-                            ExpirationDate = new DateTime(2024, 5, 14, 14, 31, 26, 37, DateTimeKind.Local).AddTicks(9348),
+                            ExpirationDate = new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(586),
+                            Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Onion",
                             ShortDescription = "Fresh Onion",
@@ -237,7 +243,8 @@ namespace FoodService.Data.Migrations
                         {
                             Id = 6,
                             Description = "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.",
-                            ExpirationDate = new DateTime(2024, 5, 17, 14, 31, 26, 37, DateTimeKind.Local).AddTicks(9350),
+                            ExpirationDate = new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(588),
+                            Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lemon",
                             ShortDescription = "Fresh Lemon",
@@ -245,7 +252,7 @@ namespace FoodService.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FoodService.Models.Order", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.Order", b =>
                 {
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
@@ -263,7 +270,7 @@ namespace FoodService.Data.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("FoodService.Models.OrderItem", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -292,7 +299,7 @@ namespace FoodService.Data.Migrations
                     b.ToTable("OrderItem");
                 });
 
-            modelBuilder.Entity("FoodService.Models.Product", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -310,8 +317,9 @@ namespace FoodService.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("longblob");
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -338,6 +346,7 @@ namespace FoodService.Data.Migrations
                             Active = true,
                             Brand = "Chef's Special",
                             Description = "Our tomato soup is made with the finest fresh tomatoes, seasoned with herbs and spices for a rich, comforting flavor.",
+                            Image = "https://i.imgur.com/aHzcc5Q.jpg",
                             Name = "Tomato Soup",
                             Price = 5.99m,
                             ShortDescription = "Delicious tomato soup",
@@ -349,6 +358,7 @@ namespace FoodService.Data.Migrations
                             Active = true,
                             Brand = "Healthy Kitchen",
                             Description = "Our chicken salad is healthy and delicious, featuring tender chicken breast, crisp lettuce, and fresh vegetables, tossed in a tangy dressing.",
+                            Image = "https://i.imgur.com/2iiBEfP.jpg",
                             Name = "Chicken Salad",
                             Price = 8.49m,
                             ShortDescription = "Healthy chicken salad",
@@ -360,6 +370,7 @@ namespace FoodService.Data.Migrations
                             Active = true,
                             Brand = "Fresh Drinks",
                             Description = "Our lemonade is made with freshly squeezed lemons, pure cane sugar, and filtered water, creating a refreshing beverage that's perfect for any occasion.",
+                            Image = "https://i.imgur.com/NFpjHQD.jpg",
                             Name = "Lemonade",
                             Price = 2.99m,
                             ShortDescription = "Refreshing lemonade",
@@ -371,6 +382,7 @@ namespace FoodService.Data.Migrations
                             Active = true,
                             Brand = "Burger House",
                             Description = "Our classic cheeseburger features a juicy beef patty, melted cheddar cheese, crisp lettuce, ripe tomatoes, onions, and pickles, all served on a toasted bun.",
+                            Image = "https://i.imgur.com/dNT5NsS.jpg",
                             Name = "Cheeseburger",
                             Price = 7.99m,
                             ShortDescription = "Classic cheeseburger",
@@ -382,6 +394,7 @@ namespace FoodService.Data.Migrations
                             Active = true,
                             Brand = "Snack Corner",
                             Description = "Our crispy onion rings are made with fresh onions, coated in a seasoned batter, and fried to golden perfection, creating a delicious side dish or snack.",
+                            Image = "https://i.imgur.com/ta6xouW.jpg",
                             Name = "Onion Rings",
                             Price = 3.49m,
                             ShortDescription = "Crispy onion rings",
@@ -389,7 +402,7 @@ namespace FoodService.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FoodService.Models.ProductIngredient", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.ProductIngredient", b =>
                 {
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -573,7 +586,7 @@ namespace FoodService.Data.Migrations
                     b.HasDiscriminator().HasValue("EmployeeUser");
                 });
 
-            modelBuilder.Entity("FoodService.Models.Order", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.Order", b =>
                 {
                     b.HasOne("FoodService.Models.Auth.User.ClientUser", "User")
                         .WithMany("Orders")
@@ -584,15 +597,15 @@ namespace FoodService.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FoodService.Models.OrderItem", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.OrderItem", b =>
                 {
-                    b.HasOne("FoodService.Models.Order", "Order")
+                    b.HasOne("FoodService.Models.Entities.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodService.Models.Product", "Product")
+                    b.HasOne("FoodService.Models.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -603,15 +616,15 @@ namespace FoodService.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("FoodService.Models.ProductIngredient", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.ProductIngredient", b =>
                 {
-                    b.HasOne("FoodService.Models.Ingredient", "Ingredient")
+                    b.HasOne("FoodService.Models.Entities.Ingredient", "Ingredient")
                         .WithMany("ProductIngredients")
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodService.Models.Product", "Product")
+                    b.HasOne("FoodService.Models.Entities.Product", "Product")
                         .WithMany("ProductIngredients")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -673,17 +686,17 @@ namespace FoodService.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FoodService.Models.Ingredient", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.Ingredient", b =>
                 {
                     b.Navigation("ProductIngredients");
                 });
 
-            modelBuilder.Entity("FoodService.Models.Order", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("FoodService.Models.Product", b =>
+            modelBuilder.Entity("FoodService.Models.Entities.Product", b =>
                 {
                     b.Navigation("ProductIngredients");
                 });

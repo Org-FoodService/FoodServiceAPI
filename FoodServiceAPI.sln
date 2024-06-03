@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodServiceAPI.Data", "Food
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodServiceAPI.Core", "FoodServiceAPI.Core\FoodServiceAPI.Core.csproj", "{B8C6345F-6606-4832-B788-34FD2C1CB46E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodServiceAPI.Shared", "FoodServiceAPI.Shared\FoodServiceAPI.Shared.csproj", "{897CCC3F-07AE-4A70-B2DE-177601428448}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B8C6345F-6606-4832-B788-34FD2C1CB46E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8C6345F-6606-4832-B788-34FD2C1CB46E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8C6345F-6606-4832-B788-34FD2C1CB46E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{897CCC3F-07AE-4A70-B2DE-177601428448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{897CCC3F-07AE-4A70-B2DE-177601428448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{897CCC3F-07AE-4A70-B2DE-177601428448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{897CCC3F-07AE-4A70-B2DE-177601428448}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
