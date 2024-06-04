@@ -16,7 +16,8 @@ namespace FoodServiceAPI.Config.Ioc
         {
             services.AddScoped<IProductCommand, ProductCommand>();
             services.AddScoped<IAuthCommand, AuthCommand>();
-            services.AddScoped<IOrderCommand, OrderCommand>();
+            services.AddScoped<IOrderCommand, OrderCommand>(); 
+            services.AddScoped<ISiteSettingsCommand, SiteSettingsCommand>();
         }
     }
 }
