@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace FoodService.Data.Migrations
+namespace FoodServiceAPI.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,6 +23,11 @@ namespace FoodService.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CanControlStock = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanChangePrice = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanAddEmployee = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanAddProduct = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanAccessFinancialResources = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -86,9 +91,12 @@ namespace FoodService.Data.Migrations
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
+                    ShortDescription = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Image = table.Column<byte[]>(type: "longblob", nullable: true)
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Image = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -109,9 +117,12 @@ namespace FoodService.Data.Migrations
                     Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
+                    ShortDescription = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Image = table.Column<byte[]>(type: "longblob", nullable: true)
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Image = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -317,27 +328,27 @@ namespace FoodService.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Ingredient",
-                columns: new[] { "Id", "Description", "ExpirationDate", "Image", "IsFresh", "Name", "StockQuantity" },
+                columns: new[] { "Id", "Description", "ExpirationDate", "Image", "IsFresh", "Name", "ShortDescription", "StockQuantity" },
                 values: new object[,]
                 {
-                    { 1, "Fresh tomato", new DateTime(2024, 5, 10, 15, 31, 15, 477, DateTimeKind.Local).AddTicks(2081), null, true, "Tomato", 100 },
-                    { 2, "Crispy lettuce", new DateTime(2024, 5, 8, 15, 31, 15, 477, DateTimeKind.Local).AddTicks(2101), null, true, "Lettuce", 50 },
-                    { 3, "Boneless chicken breast", new DateTime(2024, 5, 6, 15, 31, 15, 477, DateTimeKind.Local).AddTicks(2103), null, true, "Chicken Breast", 30 },
-                    { 4, "Cheddar cheese", new DateTime(2024, 5, 13, 15, 31, 15, 477, DateTimeKind.Local).AddTicks(2104), null, true, "Cheese", 40 },
-                    { 5, "Fresh onion", new DateTime(2024, 5, 10, 15, 31, 15, 477, DateTimeKind.Local).AddTicks(2106), null, true, "Onion", 60 },
-                    { 6, "Fresh lemon", new DateTime(2024, 5, 13, 15, 31, 15, 477, DateTimeKind.Local).AddTicks(2108), null, true, "Lemon", 30 }
+                    { 1, "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.", new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(557), "https://i.imgur.com/dNT5NsS.jpg", true, "Tomato", "Fresh Tomato", 100 },
+                    { 2, "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.", new DateTime(2024, 6, 8, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(580), "https://i.imgur.com/dNT5NsS.jpg", true, "Lettuce", "Crisp Lettuce", 50 },
+                    { 3, "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.", new DateTime(2024, 6, 6, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(582), "https://i.imgur.com/dNT5NsS.jpg", true, "Chicken Breast", "Boneless Chicken Breast", 30 },
+                    { 4, "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.", new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(584), "https://i.imgur.com/dNT5NsS.jpg", true, "Cheese", "Aged Cheddar Cheese", 40 },
+                    { 5, "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.", new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(586), "https://i.imgur.com/dNT5NsS.jpg", true, "Onion", "Fresh Onion", 60 },
+                    { 6, "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.", new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(588), "https://i.imgur.com/dNT5NsS.jpg", true, "Lemon", "Fresh Lemon", 30 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Product",
-                columns: new[] { "Id", "Active", "Brand", "Description", "Image", "Name", "Price", "Type" },
+                columns: new[] { "Id", "Active", "Brand", "Description", "Image", "Name", "Price", "ShortDescription", "Type" },
                 values: new object[,]
                 {
-                    { 1, true, "Chef's Special", "Delicious tomato soup", null, "Tomato Soup", 5.99m, 3 },
-                    { 2, true, "Healthy Kitchen", "Healthy chicken salad", null, "Chicken Salad", 8.49m, 3 },
-                    { 3, true, "Fresh Drinks", "Refreshing lemonade", null, "Lemonade", 2.99m, 2 },
-                    { 4, true, "Burger House", "Classic cheeseburger", null, "Cheeseburger", 7.99m, 3 },
-                    { 5, true, "Snack Corner", "Crispy onion rings", null, "Onion Rings", 3.49m, 3 }
+                    { 1, true, "Chef's Special", "Our tomato soup is made with the finest fresh tomatoes, seasoned with herbs and spices for a rich, comforting flavor.", "https://i.imgur.com/aHzcc5Q.jpg", "Tomato Soup", 5.99m, "Delicious tomato soup", 3 },
+                    { 2, true, "Healthy Kitchen", "Our chicken salad is healthy and delicious, featuring tender chicken breast, crisp lettuce, and fresh vegetables, tossed in a tangy dressing.", "https://i.imgur.com/2iiBEfP.jpg", "Chicken Salad", 8.49m, "Healthy chicken salad", 3 },
+                    { 3, true, "Fresh Drinks", "Our lemonade is made with freshly squeezed lemons, pure cane sugar, and filtered water, creating a refreshing beverage that's perfect for any occasion.", "https://i.imgur.com/NFpjHQD.jpg", "Lemonade", 2.99m, "Refreshing lemonade", 2 },
+                    { 4, true, "Burger House", "Our classic cheeseburger features a juicy beef patty, melted cheddar cheese, crisp lettuce, ripe tomatoes, onions, and pickles, all served on a toasted bun.", "https://i.imgur.com/dNT5NsS.jpg", "Cheeseburger", 7.99m, "Classic cheeseburger", 3 },
+                    { 5, true, "Snack Corner", "Our crispy onion rings are made with fresh onions, coated in a seasoned batter, and fried to golden perfection, creating a delicious side dish or snack.", "https://i.imgur.com/ta6xouW.jpg", "Onion Rings", 3.49m, "Crispy onion rings", 3 }
                 });
 
             migrationBuilder.InsertData(
