@@ -1,10 +1,7 @@
 ﻿using FoodService.Models.Entities;
-using FoodService.Models.Responses;
-using FoodServiceAPI.Core.Command;
+using FoodServiceAPI.Core.Interface.Command;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace FoodServiceAPI.Controllers
 {
@@ -13,10 +10,10 @@ namespace FoodServiceAPI.Controllers
     [Route("api/[controller]")]
     public class SiteSettingsController : ControllerBase
     {
-        private readonly SiteSettingsCommand _siteSettingsCommand;
+        private readonly ISiteSettingsCommand _siteSettingsCommand;
         private readonly ILogger<SiteSettingsController> _logger;
 
-        public SiteSettingsController(SiteSettingsCommand siteSettingsCommand, ILogger<SiteSettingsController> logger)
+        public SiteSettingsController(ISiteSettingsCommand siteSettingsCommand, ILogger<SiteSettingsController> logger)
         {
             _siteSettingsCommand = siteSettingsCommand;
             _logger = logger;
@@ -40,7 +37,7 @@ namespace FoodServiceAPI.Controllers
             }
 
             _logger.LogInformation("Site settings retrieved successfully.");
-            return Ok(response.Data);
+            return Ok(response);
         }
 
         /// <summary>
@@ -69,7 +66,7 @@ namespace FoodServiceAPI.Controllers
             }
 
             _logger.LogInformation("Site settings updated successfully.");
-            return Ok(response.Data);
+            return Ok(response);
         }
     }
 }

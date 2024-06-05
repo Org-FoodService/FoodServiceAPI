@@ -188,7 +188,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 1,
                             Description = "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.",
-                            ExpirationDate = new DateTime(2024, 6, 11, 20, 6, 11, 410, DateTimeKind.Local).AddTicks(8855),
+                            ExpirationDate = new DateTime(2024, 6, 12, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9727),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Tomato",
@@ -199,7 +199,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 2,
                             Description = "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.",
-                            ExpirationDate = new DateTime(2024, 6, 9, 20, 6, 11, 410, DateTimeKind.Local).AddTicks(8874),
+                            ExpirationDate = new DateTime(2024, 6, 10, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9743),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lettuce",
@@ -210,7 +210,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 3,
                             Description = "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.",
-                            ExpirationDate = new DateTime(2024, 6, 7, 20, 6, 11, 410, DateTimeKind.Local).AddTicks(8875),
+                            ExpirationDate = new DateTime(2024, 6, 8, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9745),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Chicken Breast",
@@ -221,7 +221,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 4,
                             Description = "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.",
-                            ExpirationDate = new DateTime(2024, 6, 14, 20, 6, 11, 410, DateTimeKind.Local).AddTicks(8877),
+                            ExpirationDate = new DateTime(2024, 6, 15, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9747),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Cheese",
@@ -232,7 +232,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 5,
                             Description = "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.",
-                            ExpirationDate = new DateTime(2024, 6, 11, 20, 6, 11, 410, DateTimeKind.Local).AddTicks(8879),
+                            ExpirationDate = new DateTime(2024, 6, 12, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9749),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Onion",
@@ -243,7 +243,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 6,
                             Description = "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.",
-                            ExpirationDate = new DateTime(2024, 6, 14, 20, 6, 11, 410, DateTimeKind.Local).AddTicks(8881),
+                            ExpirationDate = new DateTime(2024, 6, 15, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9751),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lemon",
@@ -486,6 +486,18 @@ namespace FoodServiceAPI.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("DangerColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DarkColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GreenColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<byte[]>("Icon")
                         .HasColumnType("longblob");
 
@@ -504,6 +516,14 @@ namespace FoodServiceAPI.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("SuccessColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TertiaryColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.ToTable("SiteSettings");
@@ -512,11 +532,16 @@ namespace FoodServiceAPI.Data.Migrations
                         new
                         {
                             Id = 1,
-                            BackgroundColor = "#ecf0f1",
-                            LastUpdate = new DateTime(2024, 6, 4, 20, 6, 11, 410, DateTimeKind.Local).AddTicks(9354),
-                            PrimaryColor = "#3498db",
-                            SecondaryColor = "#2ecc71",
-                            ServiceName = "FoodService"
+                            BackgroundColor = "#fffaf3",
+                            DangerColor = "#8E291F",
+                            DarkColor = "#412D2C",
+                            GreenColor = "#376B4C",
+                            LastUpdate = new DateTime(2024, 6, 5, 13, 23, 5, 695, DateTimeKind.Local).AddTicks(475),
+                            PrimaryColor = "#AA2E26",
+                            SecondaryColor = "#FB9F3A",
+                            ServiceName = "FoodService",
+                            SuccessColor = "#02EB62",
+                            TertiaryColor = "#2CAB61"
                         });
                 });
 

@@ -287,7 +287,8 @@ namespace FoodServiceAPI.Core.Service
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
 
-                return new SsoDto(new JwtSecurityTokenHandler().WriteToken(token), user, expiresTime);
+
+                return new SsoDto(new JwtSecurityTokenHandler().WriteToken(token), expiresTime, (List<string>)userRoles, user);
             }
             catch (Exception ex)
             {
