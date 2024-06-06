@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodServiceAPI.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240603200543_initial")]
-    partial class initial
+    [Migration("20240605162306_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -191,7 +191,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 1,
                             Description = "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.",
-                            ExpirationDate = new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(557),
+                            ExpirationDate = new DateTime(2024, 6, 12, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9727),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Tomato",
@@ -202,7 +202,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 2,
                             Description = "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.",
-                            ExpirationDate = new DateTime(2024, 6, 8, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(580),
+                            ExpirationDate = new DateTime(2024, 6, 10, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9743),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lettuce",
@@ -213,7 +213,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 3,
                             Description = "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.",
-                            ExpirationDate = new DateTime(2024, 6, 6, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(582),
+                            ExpirationDate = new DateTime(2024, 6, 8, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9745),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Chicken Breast",
@@ -224,7 +224,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 4,
                             Description = "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.",
-                            ExpirationDate = new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(584),
+                            ExpirationDate = new DateTime(2024, 6, 15, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9747),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Cheese",
@@ -235,7 +235,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 5,
                             Description = "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.",
-                            ExpirationDate = new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(586),
+                            ExpirationDate = new DateTime(2024, 6, 12, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9749),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Onion",
@@ -246,7 +246,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 6,
                             Description = "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.",
-                            ExpirationDate = new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(588),
+                            ExpirationDate = new DateTime(2024, 6, 15, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9751),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lemon",
@@ -263,10 +263,15 @@ namespace FoodServiceAPI.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("OrderId"));
 
+                    b.Property<int?>("TableId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("TableId");
 
                     b.HasIndex("UserId");
 
@@ -472,6 +477,97 @@ namespace FoodServiceAPI.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FoodService.Models.Entities.SiteSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BackgroundColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DangerColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DarkColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GreenColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("Icon")
+                        .HasColumnType("longblob");
+
+                    b.Property<DateTime>("LastUpdate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PrimaryColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SecondaryColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SuccessColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TertiaryColor")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SiteSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BackgroundColor = "#fffaf3",
+                            DangerColor = "#8E291F",
+                            DarkColor = "#412D2C",
+                            GreenColor = "#376B4C",
+                            LastUpdate = new DateTime(2024, 6, 5, 13, 23, 5, 695, DateTimeKind.Local).AddTicks(475),
+                            PrimaryColor = "#AA2E26",
+                            SecondaryColor = "#FB9F3A",
+                            ServiceName = "FoodService",
+                            SuccessColor = "#02EB62",
+                            TertiaryColor = "#2CAB61"
+                        });
+                });
+
+            modelBuilder.Entity("FoodService.Models.Entities.Table", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tables");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -591,6 +687,10 @@ namespace FoodServiceAPI.Data.Migrations
 
             modelBuilder.Entity("FoodService.Models.Entities.Order", b =>
                 {
+                    b.HasOne("FoodService.Models.Entities.Table", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("TableId");
+
                     b.HasOne("FoodService.Models.Auth.User.ClientUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
@@ -702,6 +802,11 @@ namespace FoodServiceAPI.Data.Migrations
             modelBuilder.Entity("FoodService.Models.Entities.Product", b =>
                 {
                     b.Navigation("ProductIngredients");
+                });
+
+            modelBuilder.Entity("FoodService.Models.Entities.Table", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("FoodService.Models.Auth.User.ClientUser", b =>

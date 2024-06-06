@@ -2,7 +2,6 @@
 using FoodService.Models.Auth.User;
 using FoodService.Models.Entities;
 using FoodService.Models.Enum;
-using FoodServiceAPI.Shared.Util;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +30,9 @@ namespace FoodServiceAPI.Data.Context
 
             ConfigureProductIngredients(modelBuilder);
             ConfigureInitialData(modelBuilder);
+
+            // Applying configuration for SiteSettings
+            modelBuilder.ApplyConfiguration(new SiteSettingsConfiguration());
         }
         /// <summary>
         /// Configures the many-to-many relationship between products and ingredients.
@@ -121,7 +123,7 @@ namespace FoodServiceAPI.Data.Context
         public DbSet<Ingredient> Ingredient { get; set; }
 
         /// <summary>
-        /// Represents the ingredients in the database.
+        /// Represents the product ingredient in the database.
         /// </summary>
         public DbSet<ProductIngredient> ProductIngredient { get; set; }
         /// <summary>
@@ -138,5 +140,10 @@ namespace FoodServiceAPI.Data.Context
         /// Represents the orders in the database.
         /// </summary>
         public DbSet<Table> Tables { get; set; }
+
+        /// <summary>
+        /// Represents the site settings in the database.
+        /// </summary>
+        public DbSet<SiteSettings> SiteSettings { get; set; }
     }
 }

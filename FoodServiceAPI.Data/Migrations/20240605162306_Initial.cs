@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FoodServiceAPI.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -127,6 +127,55 @@ namespace FoodServiceAPI.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Product", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "SiteSettings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PrimaryColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SecondaryColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BackgroundColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ServiceName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Icon = table.Column<byte[]>(type: "longblob", nullable: true),
+                    LastUpdate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DarkColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TertiaryColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    GreenColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SuccessColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DangerColor = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SiteSettings", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Tables",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tables", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -252,26 +301,6 @@ namespace FoodServiceAPI.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Order",
-                columns: table => new
-                {
-                    OrderId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Order", x => x.OrderId);
-                    table.ForeignKey(
-                        name: "FK_Order_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "ProductIngredient",
                 columns: table => new
                 {
@@ -293,6 +322,32 @@ namespace FoodServiceAPI.Data.Migrations
                         principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TableId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.OrderId);
+                    table.ForeignKey(
+                        name: "FK_Order_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Order_Tables_TableId",
+                        column: x => x.TableId,
+                        principalTable: "Tables",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -331,12 +386,12 @@ namespace FoodServiceAPI.Data.Migrations
                 columns: new[] { "Id", "Description", "ExpirationDate", "Image", "IsFresh", "Name", "ShortDescription", "StockQuantity" },
                 values: new object[,]
                 {
-                    { 1, "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.", new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(557), "https://i.imgur.com/dNT5NsS.jpg", true, "Tomato", "Fresh Tomato", 100 },
-                    { 2, "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.", new DateTime(2024, 6, 8, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(580), "https://i.imgur.com/dNT5NsS.jpg", true, "Lettuce", "Crisp Lettuce", 50 },
-                    { 3, "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.", new DateTime(2024, 6, 6, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(582), "https://i.imgur.com/dNT5NsS.jpg", true, "Chicken Breast", "Boneless Chicken Breast", 30 },
-                    { 4, "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.", new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(584), "https://i.imgur.com/dNT5NsS.jpg", true, "Cheese", "Aged Cheddar Cheese", 40 },
-                    { 5, "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.", new DateTime(2024, 6, 10, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(586), "https://i.imgur.com/dNT5NsS.jpg", true, "Onion", "Fresh Onion", 60 },
-                    { 6, "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.", new DateTime(2024, 6, 13, 17, 5, 43, 349, DateTimeKind.Local).AddTicks(588), "https://i.imgur.com/dNT5NsS.jpg", true, "Lemon", "Fresh Lemon", 30 }
+                    { 1, "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.", new DateTime(2024, 6, 12, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9727), "https://i.imgur.com/dNT5NsS.jpg", true, "Tomato", "Fresh Tomato", 100 },
+                    { 2, "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.", new DateTime(2024, 6, 10, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9743), "https://i.imgur.com/dNT5NsS.jpg", true, "Lettuce", "Crisp Lettuce", 50 },
+                    { 3, "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.", new DateTime(2024, 6, 8, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9745), "https://i.imgur.com/dNT5NsS.jpg", true, "Chicken Breast", "Boneless Chicken Breast", 30 },
+                    { 4, "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.", new DateTime(2024, 6, 15, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9747), "https://i.imgur.com/dNT5NsS.jpg", true, "Cheese", "Aged Cheddar Cheese", 40 },
+                    { 5, "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.", new DateTime(2024, 6, 12, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9749), "https://i.imgur.com/dNT5NsS.jpg", true, "Onion", "Fresh Onion", 60 },
+                    { 6, "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.", new DateTime(2024, 6, 15, 13, 23, 5, 694, DateTimeKind.Local).AddTicks(9751), "https://i.imgur.com/dNT5NsS.jpg", true, "Lemon", "Fresh Lemon", 30 }
                 });
 
             migrationBuilder.InsertData(
@@ -350,6 +405,11 @@ namespace FoodServiceAPI.Data.Migrations
                     { 4, true, "Burger House", "Our classic cheeseburger features a juicy beef patty, melted cheddar cheese, crisp lettuce, ripe tomatoes, onions, and pickles, all served on a toasted bun.", "https://i.imgur.com/dNT5NsS.jpg", "Cheeseburger", 7.99m, "Classic cheeseburger", 3 },
                     { 5, true, "Snack Corner", "Our crispy onion rings are made with fresh onions, coated in a seasoned batter, and fried to golden perfection, creating a delicious side dish or snack.", "https://i.imgur.com/ta6xouW.jpg", "Onion Rings", 3.49m, "Crispy onion rings", 3 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "SiteSettings",
+                columns: new[] { "Id", "BackgroundColor", "DangerColor", "DarkColor", "GreenColor", "Icon", "LastUpdate", "PrimaryColor", "SecondaryColor", "ServiceName", "SuccessColor", "TertiaryColor" },
+                values: new object[] { 1, "#fffaf3", "#8E291F", "#412D2C", "#376B4C", null, new DateTime(2024, 6, 5, 13, 23, 5, 695, DateTimeKind.Local).AddTicks(475), "#AA2E26", "#FB9F3A", "FoodService", "#02EB62", "#2CAB61" });
 
             migrationBuilder.InsertData(
                 table: "ProductIngredient",
@@ -406,6 +466,11 @@ namespace FoodServiceAPI.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Order_TableId",
+                table: "Order",
+                column: "TableId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Order_UserId",
                 table: "Order",
                 column: "UserId");
@@ -451,6 +516,9 @@ namespace FoodServiceAPI.Data.Migrations
                 name: "ProductIngredient");
 
             migrationBuilder.DropTable(
+                name: "SiteSettings");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -464,6 +532,9 @@ namespace FoodServiceAPI.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Tables");
         }
     }
 }
