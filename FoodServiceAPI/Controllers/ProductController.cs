@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FoodService.Models.Entities;
+using FoodService.Models.Responses;
 
 namespace FoodServiceAPI.Controllers
 {
@@ -32,6 +33,7 @@ namespace FoodServiceAPI.Controllers
         /// </summary>
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(typeof(ResponseCommon<List<Product>>), 200)]
         public async Task<IActionResult> GetAllProducts()
         {
             _logger.LogInformation("Fetching all products");
@@ -54,6 +56,7 @@ namespace FoodServiceAPI.Controllers
         /// <param name="id">The ID of the product to retrieve.</param>
         [AllowAnonymous]
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ResponseCommon<Product>), 200)]
         public async Task<IActionResult> GetProductById(int id)
         {
             _logger.LogInformation($"Fetching product with ID: {id}");
@@ -75,6 +78,7 @@ namespace FoodServiceAPI.Controllers
         /// </summary>
         /// <param name="product">The product to create.</param>
         [HttpPost]
+        [ProducesResponseType(typeof(ResponseCommon<Product>), 200)]
         public async Task<IActionResult> CreateProduct(Product product)
         {
             _logger.LogInformation("Creating a new product");
@@ -97,6 +101,7 @@ namespace FoodServiceAPI.Controllers
         /// <param name="id">The ID of the product to update.</param>
         /// <param name="product">The updated product data.</param>
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ResponseCommon<Product?>), 200)]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
             _logger.LogInformation($"Updating product with ID: {id}");
@@ -118,6 +123,7 @@ namespace FoodServiceAPI.Controllers
         /// </summary>
         /// <param name="id">The ID of the product to delete.</param>
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ResponseCommon<bool>), 200)]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             _logger.LogInformation($"Deleting product with ID: {id}");

@@ -1,4 +1,5 @@
 ﻿using FoodService.Models.Entities;
+using FoodService.Models.Responses;
 using FoodServiceAPI.Core.Interface.Command;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace FoodServiceAPI.Controllers
         /// <returns>A response containing the site settings.</returns>
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(typeof(ResponseCommon<SiteSettings>), 200)]
         public async Task<IActionResult> GetSiteSettings()
         {
             _logger.LogInformation("Received request to get site settings.");
@@ -48,6 +50,7 @@ namespace FoodServiceAPI.Controllers
         /// <returns>A response containing the updated site settings.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ResponseCommon<SiteSettings>), 200)]
         public async Task<IActionResult> UpdateSiteSettings(int id, [FromBody] SiteSettings siteSettings)
         {
             _logger.LogInformation("Received request to update site settings with ID {Id}.", id);
@@ -55,7 +58,8 @@ namespace FoodServiceAPI.Controllers
             if (id != siteSettings.Id)
             {
                 _logger.LogWarning("ID mismatch: URL ID {UrlId} does not match body ID {BodyId}.", id, siteSettings.Id);
-                return BadRequest("The SiteSettings ID in the URL does not match the SiteSettings ID in the request body.");
+                var requestFailure = ResponseCommon<SiteSettings>.Failure("The SiteSettings ID in the URL does not match the SiteSettings ID in the request body.", 400);
+                return StatusCode(requestFailure.StatusCode, requestFailure.Message);
             }
 
             var response = await _siteSettingsCommand.UpdateSiteSettings(id, siteSettings);

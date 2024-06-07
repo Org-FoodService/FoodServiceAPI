@@ -1,4 +1,6 @@
-﻿using FoodService.Models.Entities;
+﻿using FoodService.Models.Dto;
+using FoodService.Models.Entities;
+using FoodService.Models.Responses;
 using FoodServiceAPI.Core.Interface.Command;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FoodServiceAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -23,6 +25,7 @@ namespace FoodServiceAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(typeof(ResponseCommon<List<Order>>), 200)]
         public async Task<IActionResult> GetAllOrders()
         {
             _logger.LogInformation("Fetching all orders");
@@ -41,6 +44,7 @@ namespace FoodServiceAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ResponseCommon<Order>), 200)]
         public async Task<IActionResult> GetOrderById(int id)
         {
             _logger.LogInformation($"Fetching order with ID: {id}");
@@ -58,6 +62,7 @@ namespace FoodServiceAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(ResponseCommon<Order>), 200)]
         public async Task<IActionResult> CreateOrder(Order order)
         {
             _logger.LogInformation("Creating a new order");
@@ -82,16 +87,11 @@ namespace FoodServiceAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ResponseCommon<Order?>), 200)]
         public async Task<IActionResult> UpdateOrder(int id, Order order)
         {
             _logger.LogInformation($"Updating order with ID: {id}");
-
-            // Ensure OrderItems have reference to Order
-            foreach (var item in order.OrderItems)
-            {
-                item.Order = order;
-            }
-
             var response = await _orderCommand.UpdateOrder(id, order);
             if (response.IsSuccess)
             {
@@ -106,6 +106,8 @@ namespace FoodServiceAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ResponseCommon<bool>), 200)]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             _logger.LogInformation($"Deleting order with ID: {id}");
