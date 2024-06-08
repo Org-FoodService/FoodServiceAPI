@@ -1,4 +1,6 @@
 ﻿using FoodService.Models;
+using FoodService.Models.Entities;
+using FoodService.Models.Responses;
 using FoodServiceAPI.Core.Interface.Command;
 using FoodServiceAPI.Core.Interface.Service;
 

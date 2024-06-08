@@ -1,4 +1,5 @@
 ﻿using FoodService.Models;
+using FoodService.Models.Entities;
 
 namespace FoodServiceAPI.Core.Interface.Service
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace FoodServiceAPI.Core.Util
+namespace FoodServiceAPI.Shared.Util
 {
     /// <summary>
     /// Utility class for working with enums.
