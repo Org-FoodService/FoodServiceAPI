@@ -14,7 +14,7 @@ namespace FoodServiceAPI.Core.Identity
         private string issuer = "";
         private string audience = "";
         private readonly Dictionary<string, string> claims = [];
-        private int expiryInMinutes = 5;
+        private int expiryInMinutes = 30;
 
         /// <summary>
         /// Adds the security key used to sign the token.

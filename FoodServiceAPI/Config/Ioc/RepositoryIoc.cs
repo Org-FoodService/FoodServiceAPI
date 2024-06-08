@@ -1,4 +1,6 @@
-﻿using FoodServiceAPI.Core.Interface.Repository;
+﻿using FoodServiceAPI.Core.Repository;
+using FoodServiceAPI.Core.Interface.Command;
+using FoodServiceAPI.Core.Interface.Repository;
 using FoodServiceAPI.Core.Repository;
 
 namespace FoodServiceAPI.Config.Ioc
@@ -16,6 +18,8 @@ namespace FoodServiceAPI.Config.Ioc
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ISiteSettingsRepository, SiteSettingsRepository>();
         }
     }
 }
