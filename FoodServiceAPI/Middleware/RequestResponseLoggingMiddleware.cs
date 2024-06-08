@@ -1,4 +1,6 @@
-﻿namespace FoodServiceAPI.Middleware
+﻿using Microsoft.Extensions.Primitives;
+
+namespace FoodServiceAPI.Middleware
 {
     public class RequestResponseLoggingMiddleware
     {
@@ -18,6 +20,8 @@
             // Middleware is enabled only when the EnableRequestResponseLogging config value is set.
             if (_isRequestResponseLoggingEnabled)
             {
+                var traceResponseBody = ReadBooleanHeader(httpContext, "traceResponseBody");
+                var requestBody = traceResponseBody == true ? $"\tBody: {await ReadBodyFromRequest(httpContext.Request)}" : "" ;
                 _logger.LogInformation($"HTTP request information:\n" +
                     $"\tMethod: {httpContext.Request.Method}\n" +
                     $"\tPath: {httpContext.Request.Path}\n" +
@@ -25,7 +29,8 @@
                     $"\tHeaders: {FormatHeaders(httpContext.Request.Headers)}\n" +
                     $"\tSchema: {httpContext.Request.Scheme}\n" +
                     $"\tHost: {httpContext.Request.Host}\n" +
-                    $"\tBody: {await ReadBodyFromRequest(httpContext.Request)}");
+                    $"\tBody: {requestBody}"); ;
+                    
 
                 // Temporarily replace the HttpResponseStream, which is a write-only stream, with a MemoryStream to capture it's value in-flight.
                 var originalResponseBody = httpContext.Response.Body;
@@ -36,7 +41,7 @@
                 await _next(httpContext);
 
                 newResponseBody.Seek(0, SeekOrigin.Begin);
-                var responseBodyText = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
+                var responseBodyText = traceResponseBody == true ? await new StreamReader(httpContext.Response.Body).ReadToEndAsync() : "";
 
                 _logger.LogInformation($"HTTP response information:\n" +
                     $"\tStatusCode: {httpContext.Response.StatusCode}\n" +
@@ -51,6 +56,18 @@
             {
                 await _next(httpContext);
             }
+        }
+
+        private bool ReadBooleanHeader(HttpContext context, string headerName)
+        {
+            if (context.Request.Headers.TryGetValue(headerName, out var headerValues))
+            {
+                if (bool.TryParse(headerValues.FirstOrDefault(), out bool result))
+                {
+                    return result;
+                }
+            }
+            return true; // Default value if header is not present or cannot be parsed
         }
 
         private static string FormatHeaders(IHeaderDictionary headers) => string.Join(", ", headers.Select(kvp => $"{{{kvp.Key}: {string.Join(", ", kvp.Value)}}}"));
