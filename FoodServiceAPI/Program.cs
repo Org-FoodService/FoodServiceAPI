@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Net.Http.Headers;
 using Serilog;
 using System.Diagnostics;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
