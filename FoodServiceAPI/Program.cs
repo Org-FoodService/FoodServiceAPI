@@ -3,11 +3,8 @@ using FoodServiceAPI.Config.Ioc;
 using FoodServiceAPI.Filters;
 using Serilog;
 using FoodServiceAPI.Config.Manager;
-<<<<<<< yg/develop-exclude-sensitive-log
 using Destructurama;
-=======
 using FoodServiceAPI.Data.SqlServer.Config;
->>>>>>> develop
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +25,6 @@ builder.Services.ConfigureRepositoryIoc();
 builder.Services.ConfigureServiceIoc();
 builder.Services.ConfigureCommandIoc();
 
-<<<<<<< yg/develop-exclude-sensitive-log
 // Add Logger
 builder.Host.UseSerilog((context, configuration) => configuration
                 .ReadFrom.Configuration(context.Configuration)
@@ -36,8 +32,6 @@ builder.Host.UseSerilog((context, configuration) => configuration
 
 Log.Information("Starting up");
 
-=======
->>>>>>> develop
 // Add services to the container.
 builder.Services.AddControllers(options =>
 {
