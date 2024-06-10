@@ -1,7 +1,5 @@
-﻿using FoodServiceAPI.Core.Repository;
-using FoodServiceAPI.Core.Interface.Command;
-using FoodServiceAPI.Core.Interface.Repository;
-using FoodServiceAPI.Core.Repository;
+﻿using FoodServiceAPI.Data.SqlServer.Repository;
+using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 
 namespace FoodServiceAPI.Config.Ioc
 {

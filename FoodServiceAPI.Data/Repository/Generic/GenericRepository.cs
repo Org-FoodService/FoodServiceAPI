@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
-using FoodServiceAPI.Core.Interface.Repository.Generic;
-using FoodServiceAPI.Data.Context;
 using Microsoft.Extensions.Logging;
+using FoodServiceAPI.Data.SqlServer.Repository.Interface;
+using FoodServiceAPI.Data.SqlServer.Context;
 
-namespace FoodServiceAPI.Core.Repository.Generic
+namespace FoodServiceAPI.Data.SqlServer.Repository.Generic
 {
     /// <summary>
     /// Generic repository implementation for CRUD operations.

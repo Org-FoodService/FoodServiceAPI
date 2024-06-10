@@ -7,14 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FoodService.Models" Version="1.1.4" />
+    <PackageReference Include="FoodService.Models" Version="1.1.6" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.2" />
 	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
   </ItemGroup>
   <ItemGroup>
-	  <ProjectReference Include="..\FoodServiceAPI.Data\FoodServiceAPI.Data.csproj" />
+	  <ProjectReference Include="..\FoodServiceAPI.Data\FoodServiceAPI.Data.SqlServer.csproj" />
 	  <ProjectReference Include="..\FoodServiceAPI.Shared\FoodServiceAPI.Shared.csproj" />
   </ItemGroup>
 
