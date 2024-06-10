@@ -1,5 +1,5 @@
 ﻿using FoodServiceAPI.Core.Command;
-using FoodServiceAPI.Core.Interface.Command;
+using FoodServiceAPI.Core.Command.Interface;
 
 namespace FoodServiceAPI.Config.Ioc
 {

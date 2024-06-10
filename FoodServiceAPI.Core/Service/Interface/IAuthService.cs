@@ -1,7 +1,7 @@
 ﻿using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
 
-namespace FoodServiceAPI.Core.Interface.Service
+namespace FoodServiceAPI.Core.Service.Interface
 {
     /// <summary>
     /// Interface for the authentication service.

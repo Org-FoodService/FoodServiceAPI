@@ -1,5 +1,5 @@
-﻿using FoodServiceAPI.Core.Interface.Service;
-using FoodServiceAPI.Core.Service;
+﻿using FoodServiceAPI.Core.Service;
+using FoodServiceAPI.Core.Service.Interface;
 
 namespace FoodServiceAPI.Config.Ioc
 {

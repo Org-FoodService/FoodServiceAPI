@@ -1,7 +1,7 @@
 ﻿using FoodService.Models.Dto;
 using FoodService.Models.Entities;
 using FoodService.Models.Responses;
-using FoodServiceAPI.Core.Interface.Command;
+using FoodServiceAPI.Core.Command.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

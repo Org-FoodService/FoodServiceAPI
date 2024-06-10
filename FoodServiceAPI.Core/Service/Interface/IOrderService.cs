@@ -1,6 +1,6 @@
 ﻿using FoodService.Models.Entities;
 
-namespace FoodServiceAPI.Core.Interface.Service
+namespace FoodServiceAPI.Core.Service.Interface
 {
     public interface IOrderService
     {

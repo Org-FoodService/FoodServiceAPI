@@ -1,7 +1,7 @@
 ﻿using FoodService.Models;
 using FoodService.Models.Entities;
 
-namespace FoodServiceAPI.Core.Interface.Service
+namespace FoodServiceAPI.Core.Service.Interface
 {
     /// <summary>
     /// Interface for the product service.

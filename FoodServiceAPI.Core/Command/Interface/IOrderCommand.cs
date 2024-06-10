@@ -1,7 +1,7 @@
 ﻿using FoodService.Models.Entities;
 using FoodService.Models.Responses;
 
-namespace FoodServiceAPI.Core.Interface.Command
+namespace FoodServiceAPI.Core.Command.Interface
 {
     public interface IOrderCommand
     {

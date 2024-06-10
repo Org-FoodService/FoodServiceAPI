@@ -1,7 +1,7 @@
 ﻿using FoodService.Models.Entities;
 using FoodService.Models.Responses;
-using FoodServiceAPI.Core.Interface.Command;
-using FoodServiceAPI.Core.Interface.Service;
+using FoodServiceAPI.Core.Command.Interface;
+using FoodServiceAPI.Core.Service.Interface;
 
 namespace FoodServiceAPI.Core.Command
 { /// <summary>

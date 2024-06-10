@@ -1,7 +1,7 @@
 ﻿using FoodService.Models.Auth.Role;
 using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
-using FoodServiceAPI.Core.Interface.Service;
+using FoodServiceAPI.Core.Service.Interface;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -159,11 +159,11 @@ namespace FoodServiceAPI.Core.Service
         {
             try
             {
-                ClientUser? userExists = await _userManager.FindByNameAsync(signUpDto.Username) as ClientUser;
+                var userExists = await _userManager.FindByNameAsync(signUpDto.Username);
                 if (userExists != null)
                     throw new ArgumentException("Username already exists");
 
-                userExists = await _userManager.FindByEmailAsync(signUpDto.Email) as ClientUser;
+                userExists = await _userManager.FindByEmailAsync(signUpDto.Email);
                 if (userExists != null)
                     throw new ArgumentException("Email already exists");
 
@@ -261,7 +261,7 @@ namespace FoodServiceAPI.Core.Service
                 if (!await _userManager.CheckPasswordAsync(user, signInDto.Password))
                     throw new ArgumentException("Invalid password.");
 
-                var userRoles = await _userManager.GetRolesAsync(user);
+                var userRolesList = (await _userManager.GetRolesAsync(user)).ToList();
 
                 var authClaims = new List<Claim>
                 {
@@ -271,10 +271,7 @@ namespace FoodServiceAPI.Core.Service
                     new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
+                authClaims.AddRange(userRolesList.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Secret"]!));
                 var expiresTime = DateTime.UtcNow.AddHours(3);
@@ -288,7 +285,7 @@ namespace FoodServiceAPI.Core.Service
                 );
 
 
-                return new SsoDto(new JwtSecurityTokenHandler().WriteToken(token), expiresTime, (List<string>)userRoles, user);
+                return new SsoDto(new JwtSecurityTokenHandler().WriteToken(token), expiresTime, userRolesList, user);
             }
             catch (Exception ex)
             {
@@ -305,8 +302,8 @@ namespace FoodServiceAPI.Core.Service
         {
             try
             {
-                UserBase user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-                return user!;
+                UserBase user = (await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User))!;
+                return user;
             }
             catch (Exception ex)
             {

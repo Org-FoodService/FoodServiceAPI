@@ -2,7 +2,7 @@
 using FoodService.Models.Dto;
 using FoodService.Models.Responses;
 
-namespace FoodServiceAPI.Core.Interface.Command
+namespace FoodServiceAPI.Core.Command.Interface
 {
     public interface IAuthCommand
     {

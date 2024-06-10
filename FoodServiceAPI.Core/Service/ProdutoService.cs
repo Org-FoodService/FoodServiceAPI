@@ -1,5 +1,5 @@
 ﻿using FoodService.Models.Entities;
-using FoodServiceAPI.Core.Interface.Service;
+using FoodServiceAPI.Core.Service.Interface;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 

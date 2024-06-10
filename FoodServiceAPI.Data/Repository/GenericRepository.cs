@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using FoodServiceAPI.Data.SqlServer.Context;
 
-namespace FoodServiceAPI.Data.SqlServer.Repository.Generic
+namespace FoodServiceAPI.Data.SqlServer.Repository
 {
     /// <summary>
     /// Generic repository implementation for CRUD operations.
@@ -33,9 +33,8 @@ namespace FoodServiceAPI.Data.SqlServer.Repository.Generic
         public virtual async Task<T> CreateAsync(T entity)
         {
             _logger.LogInformation("Creating a new entity.");
-            EntityEntry<T> ret = await _context.Set<T>().AddAsync(entity);
+            EntityEntry<T> ret = _context.Set<T>().Add(entity);
             await _context.SaveChangesAsync();
-            ret.State = EntityState.Detached;
             _logger.LogInformation("Entity created successfully.");
             return ret.Entity;
         }
@@ -88,6 +87,7 @@ namespace FoodServiceAPI.Data.SqlServer.Repository.Generic
             if (entity == null)
             {
                 _logger.LogWarning("Entity not found for ID: {Id}.", id);
+                throw new KeyNotFoundException($"Entity not found for ID: {id}");
             }
             else
             {
@@ -106,6 +106,7 @@ namespace FoodServiceAPI.Data.SqlServer.Repository.Generic
             if (entity == null)
             {
                 _logger.LogWarning("Entity not found for ID: {Id}.", id);
+                throw new KeyNotFoundException($"Entity not found for ID: {id}");
             }
             else
             {

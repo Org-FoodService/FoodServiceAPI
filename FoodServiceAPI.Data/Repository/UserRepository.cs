@@ -1,6 +1,5 @@
 ﻿using FoodService.Models.Auth.User;
 using FoodServiceAPI.Data.SqlServer.Context;
-using FoodServiceAPI.Data.SqlServer.Repository.Generic;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.Extensions.Logging;
 
