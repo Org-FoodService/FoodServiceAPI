@@ -6,7 +6,6 @@ name: Build and deploy ASP.Net Core app to Azure Web App - foodservice-api
 on:
   push:
     branches:
-      - migrate_sqlserver
       - main
   workflow_dispatch:
 
