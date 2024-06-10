@@ -14,7 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5586D836-6399-44C7-87B3-6164F5AB3D4B}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		.github\workflows\azure-foodservice-api.yml = .github\workflows\azure-foodservice-api.yml
+		.github\workflows\azure_foodservice-api.yml = .github\workflows\azure_foodservice-api.yml
 		Important.txt = Important.txt
 	EndProjectSection
 EndProject
