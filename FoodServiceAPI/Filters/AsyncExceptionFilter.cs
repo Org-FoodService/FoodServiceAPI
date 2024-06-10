@@ -24,14 +24,32 @@ namespace FoodServiceAPI.Filters
             _hostEnvironment = hostEnvironment;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            context.Result = context.Exception is ServiceException serviceException ? GetResult(serviceException) : GetResult(context.Exception);
+            var exception = context.Exception;
+            var referenceId = Guid.NewGuid().ToString();
+
+            _logger.LogError(exception, "UnhandledException: {ExceptionType} - {Message}. {Log}", exception.GetType(), exception.Message, $"ReferenceId: {referenceId}");
+
+            var content = $"An unexpected error has occurred. You can use the following reference id to help us diagnose your problem: {referenceId}";
+
+            context.Result = new ContentResult
+            {
+                Content = JsonConvert.SerializeObject(content),
+                StatusCode = StatusCodes.Status500InternalServerError,
+                ContentType = "application/json"
+            };
+
             context.ExceptionHandled = true;
 
             return Task.CompletedTask;
         }
+
 
         /// <summary>
         /// Ensures a string ends in a period.
@@ -97,9 +115,10 @@ namespace FoodServiceAPI.Filters
                 responseBody.Extensions.Add("stackTrace", exception.ToString());
             }
 
+            var referenceId = Guid.NewGuid().ToString();
             var log = new ServiceExceptionLog
             {
-                ServiceExceptionLogId = Guid.NewGuid().ToString()
+                ServiceExceptionLogId = referenceId
             };
 
             var exceptionDescription = exception.Message;
@@ -108,36 +127,21 @@ namespace FoodServiceAPI.Filters
 
             _logger.LogInformation(exception, "ServiceException: {ExceptionDescription} {{{Log}}}", exceptionDescription, log);
 
-            switch (exception.ErrorCode)
+            responseBody.Status = exception.ErrorCode switch
             {
-                case ErrorCode.Forbidden:
-                    responseBody.Status = StatusCodes.Status403Forbidden;
-                    return new ObjectResult(responseBody)
-                    {
-                        StatusCode = responseBody.Status,
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
-                    };
-                case ErrorCode.InvalidRequest:
-                    responseBody.Status = StatusCodes.Status400BadRequest;
-                    return new BadRequestObjectResult(responseBody)
-                    {
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
-                    };
-                case ErrorCode.NotFound:
-                    responseBody.Status = StatusCodes.Status404NotFound;
-                    return new NotFoundObjectResult(responseBody)
-                    {
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
-                    };
+                ErrorCode.Forbidden => StatusCodes.Status403Forbidden,
+                ErrorCode.InvalidRequest => StatusCodes.Status400BadRequest,
+                ErrorCode.NotFound => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status500InternalServerError,
+            };
 
-                default:
-                    responseBody.Status = StatusCodes.Status500InternalServerError;
-                    return new ObjectResult(responseBody)
-                    {
-                        StatusCode = responseBody.Status,
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
-                    };
-            }
+            var result = new ObjectResult(responseBody)
+            {
+                StatusCode = responseBody.Status,
+                ContentTypes = { "application/problem+json", "application/problem+xml" }
+            };
+
+            return result;
         }
 
         /// <summary>

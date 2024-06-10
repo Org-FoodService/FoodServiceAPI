@@ -16,8 +16,5 @@
 	  <ProjectReference Include="..\FoodServiceAPI.Data\FoodServiceAPI.Data.SqlServer.csproj" />
 	  <ProjectReference Include="..\FoodServiceAPI.Shared\FoodServiceAPI.Shared.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interface\" />
-  </ItemGroup>
 
 </Project>
