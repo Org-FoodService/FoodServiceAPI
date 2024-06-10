@@ -11,6 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodServiceAPI.Core", "Food
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodServiceAPI.Shared", "FoodServiceAPI.Shared\FoodServiceAPI.Shared.csproj", "{897CCC3F-07AE-4A70-B2DE-177601428448}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5586D836-6399-44C7-87B3-6164F5AB3D4B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\azure-foodservice-api.yml = .github\workflows\azure-foodservice-api.yml
+		Important.txt = Important.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
