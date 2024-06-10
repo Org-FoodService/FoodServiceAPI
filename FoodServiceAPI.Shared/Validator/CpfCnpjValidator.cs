@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace FoodServiceAPI.Shared.Util.Validator
+namespace FoodServiceAPI.Shared.Validator
 {
     /// <summary>
     /// Utility class for validating CPF (Brazilian individual taxpayer registry) and CNPJ (Brazilian company taxpayer registry) numbers.

@@ -1,4 +1,4 @@
-﻿namespace FoodServiceAPI.Core.Interface.Repository.Generic
+﻿namespace FoodServiceAPI.Data.SqlServer.Repository.Interface
 {
     public interface IGenericRepository<T, TKey>
         where T : class

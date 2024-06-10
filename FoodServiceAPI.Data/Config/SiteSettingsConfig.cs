@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FoodService.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodService.Models.Entities
+namespace FoodServiceAPI.Data.SqlServer.Config
 {
     /// <summary>
     /// Configuration class for the SiteSettings entity.
     /// </summary>
-    public class SiteSettingsConfiguration : IEntityTypeConfiguration<SiteSettings>
+    public class SiteSettingsConfig : IEntityTypeConfiguration<SiteSettings>
     {
         /// <summary>
         /// Configures the SiteSettings entity.

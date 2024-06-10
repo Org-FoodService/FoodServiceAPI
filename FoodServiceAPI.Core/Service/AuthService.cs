@@ -1,8 +1,8 @@
 ﻿using FoodService.Models.Auth.Role;
 using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
-using FoodServiceAPI.Core.Interface.Repository;
 using FoodServiceAPI.Core.Interface.Service;
+using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

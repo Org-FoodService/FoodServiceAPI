@@ -2,10 +2,11 @@
 using FoodService.Models.Auth.User;
 using FoodService.Models.Entities;
 using FoodService.Models.Enum;
+using FoodServiceAPI.Data.SqlServer.Config;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodServiceAPI.Data.Context
+namespace FoodServiceAPI.Data.SqlServer.Context
 {
     /// <summary>
     /// Database context for the application, derived from IdentityDbContext.
@@ -32,7 +33,7 @@ namespace FoodServiceAPI.Data.Context
             ConfigureInitialData(modelBuilder);
 
             // Applying configuration for SiteSettings
-            modelBuilder.ApplyConfiguration(new SiteSettingsConfiguration());
+            modelBuilder.ApplyConfiguration(new SiteSettingsConfig());
         }
         /// <summary>
         /// Configures the many-to-many relationship between products and ingredients.
@@ -75,11 +76,11 @@ namespace FoodServiceAPI.Data.Context
             );
             // Add initial data for Products
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "Tomato Soup", Description = "Our tomato soup is made with the finest fresh tomatoes, seasoned with herbs and spices for a rich, comforting flavor.", ShortDescription = "Delicious tomato soup", Price = 5.99m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Chef's Special", Image = "https://i.imgur.com/aHzcc5Q.jpg" },
-                new Product { Id = 2, Name = "Chicken Salad", Description = "Our chicken salad is healthy and delicious, featuring tender chicken breast, crisp lettuce, and fresh vegetables, tossed in a tangy dressing.", ShortDescription = "Healthy chicken salad", Price = 8.49m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Healthy Kitchen" , Image = "https://i.imgur.com/2iiBEfP.jpg" },
-                new Product { Id = 3, Name = "Lemonade", Description = "Our lemonade is made with freshly squeezed lemons, pure cane sugar, and filtered water, creating a refreshing beverage that's perfect for any occasion.", ShortDescription = "Refreshing lemonade", Price = 2.99m, Active = true, Type = ProductTypeEnum.Beverage, Brand = "Fresh Drinks", Image = "https://i.imgur.com/NFpjHQD.jpg" },
-                new Product { Id = 4, Name = "Cheeseburger", Description = "Our classic cheeseburger features a juicy beef patty, melted cheddar cheese, crisp lettuce, ripe tomatoes, onions, and pickles, all served on a toasted bun.", ShortDescription = "Classic cheeseburger", Price = 7.99m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Burger House", Image = "https://i.imgur.com/dNT5NsS.jpg" },
-                new Product { Id = 5, Name = "Onion Rings", Description = "Our crispy onion rings are made with fresh onions, coated in a seasoned batter, and fried to golden perfection, creating a delicious side dish or snack.", ShortDescription = "Crispy onion rings", Price = 3.49m, Active = true, Type = ProductTypeEnum.Dish, Brand = "Snack Corner", Image = "https://i.imgur.com/ta6xouW.jpg" }
+                new Product { Id = 1, Name = "Tomato Soup", Description = "Our tomato soup is made with the finest fresh tomatoes, seasoned with herbs and spices for a rich, comforting flavor.", ShortDescription = "Delicious tomato soup", Price = 5.99, Active = true, Type = ProductTypeEnum.Dish, Brand = "Chef's Special", Image = "https://i.imgur.com/aHzcc5Q.jpg" },
+                new Product { Id = 2, Name = "Chicken Salad", Description = "Our chicken salad is healthy and delicious, featuring tender chicken breast, crisp lettuce, and fresh vegetables, tossed in a tangy dressing.", ShortDescription = "Healthy chicken salad", Price = 8.49, Active = true, Type = ProductTypeEnum.Dish, Brand = "Healthy Kitchen", Image = "https://i.imgur.com/2iiBEfP.jpg" },
+                new Product { Id = 3, Name = "Lemonade", Description = "Our lemonade is made with freshly squeezed lemons, pure cane sugar, and filtered water, creating a refreshing beverage that's perfect for any occasion.", ShortDescription = "Refreshing lemonade", Price = 2.99, Active = true, Type = ProductTypeEnum.Beverage, Brand = "Fresh Drinks", Image = "https://i.imgur.com/NFpjHQD.jpg" },
+                new Product { Id = 4, Name = "Cheeseburger", Description = "Our classic cheeseburger features a juicy beef patty, melted cheddar cheese, crisp lettuce, ripe tomatoes, onions, and pickles, all served on a toasted bun.", ShortDescription = "Classic cheeseburger", Price = 7.99, Active = true, Type = ProductTypeEnum.Dish, Brand = "Burger House", Image = "https://i.imgur.com/dNT5NsS.jpg" },
+                new Product { Id = 5, Name = "Onion Rings", Description = "Our crispy onion rings are made with fresh onions, coated in a seasoned batter, and fried to golden perfection, creating a delicious side dish or snack.", ShortDescription = "Crispy onion rings", Price = 3.49, Active = true, Type = ProductTypeEnum.Dish, Brand = "Snack Corner", Image = "https://i.imgur.com/ta6xouW.jpg" }
             );
 
             // Add initial data for the junction entity ProductIngredient

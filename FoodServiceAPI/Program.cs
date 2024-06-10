@@ -4,6 +4,7 @@ using FoodServiceAPI.Filters;
 using FoodServiceAPI.Middleware;
 using Serilog;
 using FoodServiceAPI.Config.Manager;
+using FoodServiceAPI.Data.SqlServer.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 await SerilogSeqDockerManager.ValidateDockerContainer();
 
 // Get the database connection string from appsettings.json
-string? mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+string? sqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add connection to Database
-builder.Services.ConfigureDatabase(mySqlConnection!);
+builder.Services.ConfigureDatabase(sqlConnection!);
 builder.Services.UpdateMigrationDatabase();
 
 builder.Services.ConfigureAuthentication(builder);
@@ -24,12 +25,6 @@ builder.Services.ConfigureRepositoryIoc();
 builder.Services.ConfigureServiceIoc();
 builder.Services.ConfigureCommandIoc();
 
-// Add Logger
-builder.Host.UseSerilog((context, configuration) => configuration
-                .ReadFrom.Configuration(context.Configuration));
-
-Log.Information("Starting up");
-
 // Add services to the container.
 builder.Services.AddControllers(options =>
 {
@@ -38,6 +33,12 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
+
+// Add Logger
+builder.Host.UseSerilog((context, configuration) => configuration
+                .ReadFrom.Configuration(context.Configuration));
+
+Log.Information("Starting up");
 
 var app = builder.Build();
 
