@@ -1,8 +1,8 @@
 ﻿using FoodService.Models.Auth.Role;
 using FoodService.Models.Auth.User;
-using FoodServiceAPI.Data.Context;
+using FoodServiceAPI.Data.SqlServer.Config;
+using FoodServiceAPI.Data.SqlServer.Context;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodServiceAPI.Config
 {
@@ -12,37 +12,17 @@ namespace FoodServiceAPI.Config
     public static class DatabaseConfig
     {
         /// <summary>
-        /// Configures the database with the specified MySQL connection string.
+        /// Configures the database with the specified SQLServer connection string.
         /// </summary>
         /// <param name="services">The service collection.</param>
-        /// <param name="mySqlConnection">The MySQL connection string.</param>
-        public static void ConfigureDatabase(this IServiceCollection services, string mySqlConnection)
+        /// <param name="sqlConnection">The SQLServer connection string.</param>
+        public static void ConfigureDatabase(this IServiceCollection services, string sqlConnection)
         {
-            services.AddDbContextPool<AppDbContext>(options =>
-            options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
+            services.ConfigureDatabaseSqlServer(sqlConnection);
 
             services.AddIdentity<UserBase, ApplicationRole>()
-                .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
-        }
-
-        /// <summary>
-        /// Updates the database migration if there are pending migrations.
-        /// </summary>
-        /// <param name="services">The service collection.</param>
-        public static void UpdateMigrationDatabase(this IServiceCollection services)
-        {
-            // Configure database migration
-            using (var scope = services.BuildServiceProvider().CreateScope())
-            {
-                using (var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>())
-                {
-                    if (dbContext.Database.GetPendingMigrations().Any())
-                    {
-                        dbContext.Database.Migrate();
-                    }
-                }
-            }
+                        .AddEntityFrameworkStores<AppDbContext>()
+                        .AddDefaultTokenProviders();
         }
     }
 }

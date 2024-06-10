@@ -1,7 +1,6 @@
 ﻿using FoodService.Models.Entities;
-using FoodServiceAPI.Core.Interface.Repository.Generic;
 
-namespace FoodServiceAPI.Core.Interface.Repository
+namespace FoodServiceAPI.Data.SqlServer.Repository.Interface
 {
     /// <summary>
     /// Interface for the repository of products.

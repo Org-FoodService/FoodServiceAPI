@@ -1,10 +1,10 @@
 ﻿using FoodService.Models.Entities;
-using FoodServiceAPI.Core.Interface.Repository;
-using FoodServiceAPI.Core.Repository.Generic;
-using FoodServiceAPI.Data.Context;
+using FoodServiceAPI.Data.SqlServer.Context;
+using FoodServiceAPI.Data.SqlServer.Repository.Generic;
+using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.Extensions.Logging;
 
-namespace FoodServiceAPI.Core.Repository
+namespace FoodServiceAPI.Data.SqlServer.Repository
 {
     public class OrderRepository : GenericRepository<Order, int>, IOrderRepository
     {
