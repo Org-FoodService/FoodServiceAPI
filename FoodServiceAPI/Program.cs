@@ -1,9 +1,9 @@
 using FoodServiceAPI.Config;
 using FoodServiceAPI.Config.Ioc;
 using FoodServiceAPI.Filters;
-using FoodServiceAPI.Middleware;
 using Serilog;
 using FoodServiceAPI.Config.Manager;
+using Destructurama;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +26,8 @@ builder.Services.ConfigureCommandIoc();
 
 // Add Logger
 builder.Host.UseSerilog((context, configuration) => configuration
-                .ReadFrom.Configuration(context.Configuration));
+                .ReadFrom.Configuration(context.Configuration)
+                .Destructure.UsingAttributes());
 
 Log.Information("Starting up");
 
@@ -34,6 +35,7 @@ Log.Information("Starting up");
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<AsyncExceptionFilter>();
+    options.Filters.Add<RequestResponseLogFilter>();
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -54,7 +56,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
 app.MapControllers();
 

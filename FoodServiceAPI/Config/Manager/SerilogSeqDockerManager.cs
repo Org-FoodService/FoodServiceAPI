@@ -36,6 +36,8 @@ namespace FoodServiceAPI.Config.Manager
 
         private static async Task RunDockerCommand()
         {
+            Console.WriteLine("Starting process to create docker container for serilog sink seq.");
+
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = "docker",
