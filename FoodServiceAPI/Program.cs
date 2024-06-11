@@ -1,10 +1,10 @@
-using FoodServiceAPI.Config;
-using FoodServiceAPI.Config.Ioc;
-using FoodServiceAPI.Filters;
-using Serilog;
-using FoodServiceAPI.Config.Manager;
 using Destructurama;
 using FoodServiceAPI.Data.SqlServer.Config;
+using FoodServiceAPI.Config;
+using FoodServiceAPI.Config.Ioc;
+using FoodServiceAPI.Config.Manager;
+using FoodServiceAPI.Filters;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +24,9 @@ builder.Services.ConfigureAuthentication(builder);
 builder.Services.ConfigureRepositoryIoc();
 builder.Services.ConfigureServiceIoc();
 builder.Services.ConfigureCommandIoc();
+
+// Add HealthCheck
+builder.Services.AddHealthChecks();
 
 // Add Logger
 builder.Host.UseSerilog((context, configuration) => configuration
@@ -54,6 +57,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -65,5 +69,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    _ = endpoints.MapGet("/", async context =>
+    {
+        var data = new { message = "Welcome to the FoodService API" };
+        await context.Response.WriteAsJsonAsync(data);
+    });
+
+    _ = endpoints.MapHealthChecks("/health");
+});
 
 app.Run();
