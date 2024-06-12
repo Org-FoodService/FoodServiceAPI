@@ -2,6 +2,7 @@
 using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
 using FoodServiceAPI.Core.Service.Interface;
+using FoodServiceAPI.Core.Wrapper.Interface;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -28,7 +29,7 @@ namespace FoodServiceAPI.Core.Service
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserManager<UserBase> _userManager;
+        private readonly IUserManagerWrapper<UserBase> _userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
@@ -42,7 +43,7 @@ namespace FoodServiceAPI.Core.Service
             ILogger<AuthService> logger,
             IUserRepository userRepository,
             IConfiguration configuration,
-            UserManager<UserBase> userManager,
+            IUserManagerWrapper<UserBase> userManager,
             IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
@@ -159,11 +160,11 @@ namespace FoodServiceAPI.Core.Service
         {
             try
             {
-                var userExists = await _userManager.FindByNameAsync(signUpDto.Username);
+                var userExists = await _userManager.Identity.FindByNameAsync(signUpDto.Username);
                 if (userExists != null)
                     throw new ArgumentException("Username already exists");
 
-                userExists = await _userManager.FindByEmailAsync(signUpDto.Email);
+                userExists = await _userManager.Identity.FindByEmailAsync(signUpDto.Email);
                 if (userExists != null)
                     throw new ArgumentException("Email already exists");
 
@@ -176,7 +177,7 @@ namespace FoodServiceAPI.Core.Service
                     PhoneNumber = signUpDto.PhoneNumber,
                 };
 
-                var result = await _userManager.CreateAsync(user, signUpDto.Password);
+                var result = await _userManager.Identity.CreateAsync(user, signUpDto.Password);
 
                 if (!result.Succeeded)
                     if (result.Errors.ToList().Count > 0)
@@ -185,10 +186,10 @@ namespace FoodServiceAPI.Core.Service
                         throw new ArgumentException("User registration failed.");
 
                 // If this is the first user, add admin role
-                var isFirstUser = await _userManager.Users.CountAsync() == 1;
+                var isFirstUser = await _userManager.Identity.Users.CountAsync() == 1;
                 if (isFirstUser)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, "Admin");
+                    var roleResult = await _userManager.Identity.AddToRoleAsync(user, "Admin");
                     if (!roleResult.Succeeded)
                     {
                         throw new ArgumentException("Failed to add user to admin role.");
@@ -225,8 +226,8 @@ namespace FoodServiceAPI.Core.Service
         {
             try
             {
-                UserBase user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new ArgumentException("User not found.");
-                await _userManager.AddToRoleAsync(user, roleName);
+                UserBase user = await _userManager.Identity.FindByIdAsync(userId.ToString()) ?? throw new ArgumentException("User not found.");
+                await _userManager.Identity.AddToRoleAsync(user, roleName);
 
                 if (propertyInfos != null)
                 {
@@ -238,7 +239,7 @@ namespace FoodServiceAPI.Core.Service
                 }
 
                 // Update the user in the database
-                await _userManager.UpdateAsync(user);
+                await _userManager.Identity.UpdateAsync(user);
             }
             catch (Exception ex)
             {
@@ -256,12 +257,12 @@ namespace FoodServiceAPI.Core.Service
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(signInDto.Username) ?? throw new ArgumentException("User not found.");
+                var user = await _userManager.Identity.FindByNameAsync(signInDto.Username) ?? throw new ArgumentException("User not found.");
 
-                if (!await _userManager.CheckPasswordAsync(user, signInDto.Password))
+                if (!await _userManager.Identity.CheckPasswordAsync(user, signInDto.Password))
                     throw new ArgumentException("Invalid password.");
 
-                var userRolesList = (await _userManager.GetRolesAsync(user)).ToList();
+                var userRolesList = (await _userManager.Identity.GetRolesAsync(user)).ToList();
 
                 var authClaims = new List<Claim>
                 {
@@ -302,7 +303,7 @@ namespace FoodServiceAPI.Core.Service
         {
             try
             {
-                UserBase user = (await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User))!;
+                UserBase user = (await _userManager.Identity.GetUserAsync(_httpContextAccessor.HttpContext.User))!;
                 return user;
             }
             catch (Exception ex)
