@@ -530,18 +530,18 @@ namespace FoodServiceApi.Tests.Core.Service
             _mockUserManager.Verify(um => um.UpdateAsync(It.Is<UserBase>(u => u.Id == userId)), Times.Once);
         }
 
-        [Fact(DisplayName = "AddUserToAdminRole - Should log error and rethrow when exception occurs in AddUserToAdminRole")]
+        [Fact(DisplayName = "AddUserToAdminRole - Should log error and rethrow when not found User")]
         public async Task AddUserToAdminRole_ShouldLogErrorOnException()
         {
             // Arrange
             int userId = 1;
             SetupUserManagerWithUser();
-            _mockUserManager.Setup(um => um.FindByIdAsync(It.IsAny<string>())).ThrowsAsync(new Exception("User not found"));
+            _mockUserManager.Setup(um => um.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult<UserBase>(null));
 
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _authService.AddUserToAdminRole(userId));
-            Assert.Equal("User not found", exception.Message);
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.AddUserToAdminRole(userId));
+            Assert.Equal("User not found.", exception.Message);
         }
         #endregion
     }
