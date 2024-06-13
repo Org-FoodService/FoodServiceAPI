@@ -23,27 +23,13 @@ namespace FoodServiceApi.Tests.Core.Service
         private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
 
         private readonly SignUpDto _newUser;
+        private readonly SignInDto _signIn;
 
         private readonly ClientUser _existingClientUser;
         private readonly ClientUser _clientUser;
 
         public AuthServiceTests()
         {
-            _mockLogger = new Mock<ILogger<AuthService>>();
-            _mockUserRepository = new Mock<IUserRepository>();
-            _mockConfiguration = new Mock<IConfiguration>();
-            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-
-            var store = new Mock<IUserStore<UserBase>>();
-            _mockUserManager = new Mock<IUserManagerWrapper<UserBase>>();
-            _authService = new AuthService(
-                _mockLogger.Object,
-                _mockUserRepository.Object,
-                _mockConfiguration.Object,
-                _mockUserManager.Object,
-                _mockHttpContextAccessor.Object
-            );
-
             _newUser = new SignUpDto
             {
                 Username = "newuser",
@@ -53,20 +39,38 @@ namespace FoodServiceApi.Tests.Core.Service
                 Email = "newuser@example.com",
                 CpfCnpj = "12345678901"
             };
+            _signIn = new SignInDto
+            {
+                Username = "user1",
+                Password = "Password123!"
+            };
+
 
             _clientUser = new ClientUser
             {
                 UserName = "user1",
                 Email = "user1@example.com",
-                CpfCnpj = "11111111111"
+                CpfCnpj = "12345678901"
             };
-            _existingClientUser = new ClientUser 
-            { 
-                UserName = "existinguser", 
-                Email = "existinguser@example.com", 
-                CpfCnpj = "12345678901" 
+            _existingClientUser = new ClientUser
+            {
+                UserName = "existinguser",
+                Email = "existinguser@example.com",
+                CpfCnpj = "12345678901"
             };
 
+            _mockLogger = new Mock<ILogger<AuthService>>();
+            _mockUserRepository = new Mock<IUserRepository>();
+            _mockConfiguration = new Mock<IConfiguration>();
+            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            _mockUserManager = new Mock<IUserManagerWrapper<UserBase>>();
+            _authService = new AuthService(
+                _mockLogger.Object,
+                _mockUserRepository.Object,
+                _mockConfiguration.Object,
+                _mockUserManager.Object,
+                _mockHttpContextAccessor.Object
+            );
         }
 
         #region Setups
@@ -91,7 +95,7 @@ namespace FoodServiceApi.Tests.Core.Service
         }
 
 
-        private void SetupUserManagerWithUser(ClientUser user = null, string role = "User")
+        private void SetupUserManagerWithUser(ClientUser? user = null, string role = "User")
         {
             if (user != null)
             {
@@ -148,7 +152,7 @@ namespace FoodServiceApi.Tests.Core.Service
             var users = new List<ClientUser>
             {
                 _clientUser,
-                new ClientUser { UserName = "user2", Email = "user2@example.com", CpfCnpj = "22222222222" }
+                _existingClientUser
             };
             SetupUserRepository(users);
 
@@ -327,7 +331,7 @@ namespace FoodServiceApi.Tests.Core.Service
             // Arrange
             var signUpDto = _newUser;
             SetupUserManagerWithIdentityResult(identityResult: IdentityResult.Success);
-            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", Id = 1, CpfCnpj = "12345678901" };
+            var user = _clientUser;
             SetupUserManagerWithUser(user: user);
 
             // Act
@@ -341,8 +345,10 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignUp_UsernameAlreadyExists_ThrowsArgumentException()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "existinguser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = _newUser;
             var existingUser = _existingClientUser;
+            signUpDto.Username = existingUser.UserName!;
+
             SetupUserManagerWithUser(existingUser);
 
             // Act & Assert
@@ -354,8 +360,9 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignUp_EmailAlreadyExists_ThrowsArgumentException()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "existinguser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = _newUser;
             var existingUser = _existingClientUser;
+            signUpDto.Email = _existingClientUser.Email!;
             SetupUserManagerWithUser(existingUser);
 
             // Act & Assert
@@ -380,15 +387,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignUp_UserCreationFailsWithoutSpecificErrorMessages_ThrowsArgumentException()
         {
             // Arrange
-            var signUpDto = new SignUpDto
-            {
-                Username = "newuser",
-                Password = "Password123!",
-                ConfirmPassword = "Password123!",
-                PhoneNumber = "11911112222",
-                Email = "newuser@example.com",
-                CpfCnpj = "12345678901"
-            };
+            var signUpDto = _newUser;
 
             var failedResult = IdentityResult.Failed();
             _mockUserManager.Setup(um => um.CreateAsync(It.IsAny<ClientUser>(), It.IsAny<string>())).ReturnsAsync(failedResult);
@@ -438,8 +437,8 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignIn_Success_ReturnsSsoDto()
         {
             // Arrange
-            var signInDto = new SignInDto { Username = "user1", Password = "Password123!" };
-            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", Id = 1, CpfCnpj = "12345678901" };
+            var signInDto = _signIn;
+            var user = _clientUser;
             SetupUserManagerWithUser(user: user);
             SetupConfiguration();
 
@@ -481,7 +480,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignIn_Error_ThrowsException()
         {
             // Arrange
-            var signInDto = new SignInDto { Username = "user1", Password = "Password123!" };
+            var signInDto = _signIn;
             _mockUserManager.Setup(um => um.FindByNameAsync(It.IsAny<string>())).ThrowsAsync(new Exception("Test exception"));
 
             // Act & Assert
