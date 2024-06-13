@@ -6,16 +6,10 @@ using FoodServiceAPI.Core.Wrapper.Interface;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodServiceApi.Tests.Core.Service
 {
@@ -36,7 +30,7 @@ namespace FoodServiceApi.Tests.Core.Service
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
 
             var store = new Mock<IUserStore<UserBase>>();
-            _mockUserManager = new Mock<IUserManagerWrapper<UserBase>>(store.Object, null, null, null, null, null, null, null, null);
+            _mockUserManager = new Mock<IUserManagerWrapper<UserBase>>();
             _authService = new AuthService(
                 _mockLogger.Object,
                 _mockUserRepository.Object,
@@ -61,22 +55,36 @@ namespace FoodServiceApi.Tests.Core.Service
             _mockUserRepository.Setup(repo => repo.DeleteAsync(It.IsAny<ClientUser>())).ReturnsAsync(true);
         }
 
-
-
-        private void SetupUserManagerWithUser(ClientUser user, string role = "User")
+        private void SetupUserRepositoryToThrowException()
         {
-            _mockUserManager.Setup(um => um.FindByNameAsync(user.UserName!)).ReturnsAsync(user);
-            _mockUserManager.Setup(um => um.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
-            _mockUserManager.Setup(um => um.FindByIdAsync(user.Id.ToString())).ReturnsAsync(user);
-            _mockUserManager.Setup(um => um.CheckPasswordAsync(user, It.IsAny<string>())).ReturnsAsync(true);
-            _mockUserManager.Setup(um => um.GetRolesAsync(user)).ReturnsAsync(new List<string> { role });
+            _mockUserRepository.Setup(repo => repo.ListAll()).Throws(new Exception("Test exception"));
+            _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception("Test exception"));
         }
+
+
+        private void SetupUserManagerWithUser(ClientUser user = null, string role = "User")
+        {
+            if (user != null)
+            {
+                _mockUserManager.Setup(um => um.FindByNameAsync(user.UserName!)).ReturnsAsync(user);
+                _mockUserManager.Setup(um => um.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
+                _mockUserManager.Setup(um => um.FindByIdAsync(user.Id.ToString())).ReturnsAsync(user);
+                _mockUserManager.Setup(um => um.CheckPasswordAsync(user, It.IsAny<string>())).ReturnsAsync(true);
+                _mockUserManager.Setup(um => um.GetRolesAsync(user)).ReturnsAsync(new List<string> { role });
+            }
+            else
+            {
+                _mockUserManager.Setup(um => um.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((ClientUser?)null);
+                _mockUserManager.Setup(um => um.FindByEmailAsync(It.IsAny<string>())).ReturnsAsync((ClientUser?)null);
+            }
+        }
+
 
         private void SetupUserManagerWithIdentityResult(IdentityResult identityResult)
         {
             _mockUserManager.Setup(um => um.CreateAsync(It.IsAny<UserBase>(), It.IsAny<string>())).ReturnsAsync(identityResult);
             _mockUserManager.Setup(um => um.AddToRoleAsync(It.IsAny<UserBase>(), "Admin")).ReturnsAsync(identityResult);
-            //_mockUserManager.Setup(um => um.Users.CountAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+            _mockUserManager.Setup(um => um.CountUsersAsync()).ReturnsAsync(2);
         }
 
 
@@ -101,6 +109,7 @@ namespace FoodServiceApi.Tests.Core.Service
 
         #endregion
 
+        #region ListUsers
         [Fact(DisplayName = "ListUsers - Success")]
         public async Task ListUsers_Success_ReturnsListOfUsers()
         {
@@ -119,6 +128,32 @@ namespace FoodServiceApi.Tests.Core.Service
             Assert.Equal(users, result);
         }
 
+        [Fact(DisplayName = "ListUsers - Error")]
+        public async Task ListUsers_Error_ThrowsException()
+        {
+            // Arrange
+            SetupUserRepositoryToThrowException();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<Exception>(() => _authService.ListUsers());
+
+            // Verify that the exception message is the one expected
+            Assert.Equal("Test exception", exception.Message);
+
+            // Verify that the logger was called with the appropriate error message
+            _mockLogger.Verify(
+                x => x.Log(
+                    It.Is<LogLevel>(logLevel => logLevel == LogLevel.Error),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => true),
+                    It.Is<Exception>(ex => ex.Message == "Test exception"),
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)!),
+                Times.Once
+            );
+        }
+        #endregion
+
+        #region GetUserById
         [Fact(DisplayName = "GetUserById - Success")]
         public async Task GetUserById_Success_ReturnsUser()
         {
@@ -143,7 +178,9 @@ namespace FoodServiceApi.Tests.Core.Service
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentException>(() => _authService.GetUserById(userId));
         }
+        #endregion
 
+        #region GetUserDto
         [Fact(DisplayName = "GetUserDto - Success")]
         public async Task GetUserDto_Success_ReturnsUserDto()
         {
@@ -159,6 +196,47 @@ namespace FoodServiceApi.Tests.Core.Service
             Assert.Equal(user.Email, result.Email);
         }
 
+        [Fact(DisplayName = "GetUserDto - Error")]
+        public async Task GetUserDto_Error_ThrowsException()
+        {
+            // Arrange
+            var userId = 1;
+            SetupUserRepositoryToThrowException();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<Exception>(() => _authService.GetUserDto(userId));
+
+            // Verify that the exception message is the one expected
+            Assert.Equal("Test exception", exception.Message);
+
+            // Verify that the logger was called with the appropriate error message for GetUserById
+            _mockLogger.Verify(
+                x => x.Log(
+                    It.Is<LogLevel>(logLevel => logLevel == LogLevel.Error),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Error occurred while retrieving user by ID")),
+                    It.Is<Exception>(ex => ex.Message == "Test exception"),
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)!
+                ),
+                Times.Once
+            );
+
+            // Verify that the logger was called with the appropriate error message for GetUserDto
+            _mockLogger.Verify(
+                x => x.Log(
+                    It.Is<LogLevel>(logLevel => logLevel == LogLevel.Error),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Error occurred while retrieving user DTO by ID")),
+                    It.Is<Exception>(ex => ex.Message == "Test exception"),
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)!
+                ),
+                Times.Once
+            );
+        }
+        #endregion
+
+
+        #region UpdateUser
         [Fact(DisplayName = "UpdateUser - Success")]
         public async Task UpdateUser_Success_ReturnsAffectedRows()
         {
@@ -183,7 +261,9 @@ namespace FoodServiceApi.Tests.Core.Service
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentException>(() => _authService.UpdateUser(user));
         }
+        #endregion
 
+        #region DeleteUser
         [Fact(DisplayName = "DeleteUser - Success")]
         public async Task DeleteUser_Success_ReturnsTrue()
         {
@@ -208,7 +288,9 @@ namespace FoodServiceApi.Tests.Core.Service
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentException>(() => _authService.DeleteUser(userId));
         }
+        #endregion
 
+        #region SignUp
         [Fact(DisplayName = "SignUp - Success")]
         public async Task SignUp_Success_ReturnsTrue()
         {
@@ -225,6 +307,103 @@ namespace FoodServiceApi.Tests.Core.Service
             Assert.True(result);
         }
 
+        [Fact(DisplayName = "SignUp - Username Already Exists")]
+        public async Task SignUp_UsernameAlreadyExists_ThrowsArgumentException()
+        {
+            // Arrange
+            var signUpDto = new SignUpDto { Username = "existinguser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            var existingUser = new ClientUser { UserName = "existinguser", Email = "existinguser@example.com", CpfCnpj = "12345678901" };
+            SetupUserManagerWithUser(existingUser);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.SignUp(signUpDto));
+            Assert.Equal("Username already exists", exception.Message);
+        }
+
+        [Fact(DisplayName = "SignUp - Email Already Exists")]
+        public async Task SignUp_EmailAlreadyExists_ThrowsArgumentException()
+        {
+            // Arrange
+            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "existinguser@example.com", CpfCnpj = "12345678901" };
+            var existingUser = new ClientUser { UserName = "existinguser", Email = "existinguser@example.com", CpfCnpj = "12345678901" };
+            SetupUserManagerWithUser(existingUser);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.SignUp(signUpDto));
+            Assert.Equal("Email already exists", exception.Message);
+        }
+
+        [Fact(DisplayName = "SignUp - User Creation Fails")]
+        public async Task SignUp_UserCreationFails_ThrowsArgumentException()
+        {
+            // Arrange
+            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            SetupUserManagerWithIdentityResult(IdentityResult.Failed(new IdentityError { Description = "User registration failed." }));
+            SetupUserManagerWithUser();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.SignUp(signUpDto));
+            Assert.Equal("User registration failed.", exception.Message);
+        }
+
+        [Fact(DisplayName = "SignUp - User Creation Fails Without Specific Error Messages")]
+        public async Task SignUp_UserCreationFailsWithoutSpecificErrorMessages_ThrowsArgumentException()
+        {
+            // Arrange
+            var signUpDto = new SignUpDto
+            {
+                Username = "newuser",
+                Password = "Password123!",
+                ConfirmPassword = "Password123!",
+                PhoneNumber = "11911112222",
+                Email = "newuser@example.com",
+                CpfCnpj = "12345678901"
+            };
+
+            var failedResult = IdentityResult.Failed();
+            _mockUserManager.Setup(um => um.CreateAsync(It.IsAny<ClientUser>(), It.IsAny<string>())).ReturnsAsync(failedResult);
+            _mockUserManager.Setup(um => um.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((ClientUser?)null);
+            _mockUserManager.Setup(um => um.FindByEmailAsync(It.IsAny<string>())).ReturnsAsync((ClientUser?)null);
+            _mockUserManager.Setup(um => um.CountUsersAsync()).ReturnsAsync(2);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.SignUp(signUpDto));
+            Assert.Equal("User registration failed.", exception.Message);
+        }
+
+        [Fact(DisplayName = "SignUp - Add to Admin Role Fails")]
+        public async Task SignUp_AddToAdminRoleFails_ThrowsArgumentException()
+        {
+            // Arrange
+            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            SetupUserManagerWithIdentityResult(IdentityResult.Success);
+            _mockUserManager.Setup(um => um.AddToRoleAsync(It.IsAny<ClientUser>(), "Admin")).ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Failed to add user to admin role." }));
+            _mockUserManager.Setup(um => um.CountUsersAsync()).ReturnsAsync(1);
+            SetupUserManagerWithUser();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.SignUp(signUpDto));
+            Assert.Equal("Failed to add user to admin role.", exception.Message);
+        }
+
+        [Fact(DisplayName = "SignUp - Add to Admin Role Success")]
+        public async Task SignUp_AddToAdminRoleSuccess()
+        {
+            // Arrange
+            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            SetupUserManagerWithIdentityResult(IdentityResult.Success);
+            _mockUserManager.Setup(um => um.CountUsersAsync()).ReturnsAsync(1);
+            SetupUserManagerWithUser();
+
+            // Act
+            var result = await _authService.SignUp(signUpDto);
+
+            // Assert
+            Assert.True(result);
+        }
+        #endregion
+
+        #region SignIn
         [Fact(DisplayName = "SignIn - Success")]
         public async Task SignIn_Success_ReturnsSsoDto()
         {
@@ -241,7 +420,9 @@ namespace FoodServiceApi.Tests.Core.Service
             Assert.NotNull(result);
             Assert.Equal("user1", result.User.UserName);
         }
+        #endregion
 
+        #region GetCurrentUser
         [Fact(DisplayName = "GetCurrentUser - Success")]
         public async Task GetCurrentUser_Success_ReturnsCurrentUser()
         {
@@ -255,6 +436,8 @@ namespace FoodServiceApi.Tests.Core.Service
             // Assert
             Assert.Equal(user, result);
         }
+        #endregion
+
     }
 }
 

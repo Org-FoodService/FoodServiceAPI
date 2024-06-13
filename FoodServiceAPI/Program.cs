@@ -24,6 +24,7 @@ builder.Services.ConfigureAuthentication(builder);
 builder.Services.ConfigureRepositoryIoc();
 builder.Services.ConfigureServiceIoc();
 builder.Services.ConfigureCommandIoc();
+builder.Services.ConfigureWrapperIoc();
 
 // Add HealthCheck
 builder.Services.AddHealthChecks();

@@ -1,5 +1,5 @@
-﻿using FoodServiceAPI.Core.Service.Interface;
-using FoodServiceAPI.Core.Service;
+﻿using FoodServiceAPI.Core.Wrapper.Interface;
+using FoodServiceAPI.Core.Wrapper;
 
 namespace FoodServiceAPI.Config.Ioc
 {
@@ -9,12 +9,9 @@ namespace FoodServiceAPI.Config.Ioc
         /// Configures IoC container for wrapper.
         /// </summary>
         /// <param name="services">The service collection.</param>
-        public static void ConfigureServiceIoc(this IServiceCollection services)
+        public static void ConfigureWrapperIoc(this IServiceCollection services)
         {
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<ISiteSettingsService, SiteSettingsService>();
+            services.AddScoped(typeof(IUserManagerWrapper<>), typeof(UserManagerWrapper<>));
         }
     }
 }
