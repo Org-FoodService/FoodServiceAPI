@@ -22,6 +22,11 @@ namespace FoodServiceApi.Tests.Core.Service
         private readonly Mock<IUserManagerWrapper<UserBase>> _mockUserManager;
         private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
 
+        private readonly SignUpDto _newUser;
+
+        private readonly ClientUser _existingClientUser;
+        private readonly ClientUser _clientUser;
+
         public AuthServiceTests()
         {
             _mockLogger = new Mock<ILogger<AuthService>>();
@@ -38,6 +43,30 @@ namespace FoodServiceApi.Tests.Core.Service
                 _mockUserManager.Object,
                 _mockHttpContextAccessor.Object
             );
+
+            _newUser = new SignUpDto
+            {
+                Username = "newuser",
+                Password = "Password123!",
+                ConfirmPassword = "Password123!",
+                PhoneNumber = "11911112222",
+                Email = "newuser@example.com",
+                CpfCnpj = "12345678901"
+            };
+
+            _clientUser = new ClientUser
+            {
+                UserName = "user1",
+                Email = "user1@example.com",
+                CpfCnpj = "11111111111"
+            };
+            _existingClientUser = new ClientUser 
+            { 
+                UserName = "existinguser", 
+                Email = "existinguser@example.com", 
+                CpfCnpj = "12345678901" 
+            };
+
         }
 
         #region Setups
@@ -97,16 +126,18 @@ namespace FoodServiceApi.Tests.Core.Service
 
         private void SetupHttpContextAccessor(UserBase user)
         {
-            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName!),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            }, "mock"));
+            };
+
+            var identity = new ClaimsIdentity(claims, "mock");
+            var claimsPrincipal = new ClaimsPrincipal(identity);
 
             _mockHttpContextAccessor.Setup(h => h.HttpContext!.User).Returns(claimsPrincipal);
             _mockUserManager.Setup(um => um.GetUserAsync(claimsPrincipal)).ReturnsAsync(user);
         }
-
         #endregion
 
         #region ListUsers
@@ -116,7 +147,7 @@ namespace FoodServiceApi.Tests.Core.Service
             // Arrange
             var users = new List<ClientUser>
             {
-                new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" },
+                _clientUser,
                 new ClientUser { UserName = "user2", Email = "user2@example.com", CpfCnpj = "22222222222" }
             };
             SetupUserRepository(users);
@@ -158,7 +189,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task GetUserById_Success_ReturnsUser()
         {
             // Arrange
-            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" };
+            var user = _clientUser;
             SetupUserRepository(new List<ClientUser> { user }, true);
 
             // Act
@@ -185,7 +216,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task GetUserDto_Success_ReturnsUserDto()
         {
             // Arrange
-            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" };
+            var user = _clientUser;
             SetupUserRepository(new List<ClientUser> { user }, true);
 
             // Act
@@ -235,13 +266,12 @@ namespace FoodServiceApi.Tests.Core.Service
         }
         #endregion
 
-
         #region UpdateUser
         [Fact(DisplayName = "UpdateUser - Success")]
         public async Task UpdateUser_Success_ReturnsAffectedRows()
         {
             // Arrange
-            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" };
+            var user = _clientUser;
             SetupUserRepository(new List<ClientUser> { user }, true);
 
             // Act
@@ -255,7 +285,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task UpdateUser_UserNotFound_ThrowsArgumentException()
         {
             // Arrange
-            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" };
+            var user = _clientUser;
             SetupUserRepository(new List<ClientUser>());
 
             // Act & Assert
@@ -268,7 +298,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task DeleteUser_Success_ReturnsTrue()
         {
             // Arrange
-            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" };
+            var user = _clientUser;
             SetupUserRepository(new List<ClientUser> { user }, true);
 
             // Act
@@ -295,7 +325,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignUp_Success_ReturnsTrue()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = _newUser;
             SetupUserManagerWithIdentityResult(identityResult: IdentityResult.Success);
             var user = new ClientUser { UserName = "user1", Email = "user1@example.com", Id = 1, CpfCnpj = "12345678901" };
             SetupUserManagerWithUser(user: user);
@@ -312,7 +342,7 @@ namespace FoodServiceApi.Tests.Core.Service
         {
             // Arrange
             var signUpDto = new SignUpDto { Username = "existinguser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
-            var existingUser = new ClientUser { UserName = "existinguser", Email = "existinguser@example.com", CpfCnpj = "12345678901" };
+            var existingUser = _existingClientUser;
             SetupUserManagerWithUser(existingUser);
 
             // Act & Assert
@@ -325,7 +355,7 @@ namespace FoodServiceApi.Tests.Core.Service
         {
             // Arrange
             var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "existinguser@example.com", CpfCnpj = "12345678901" };
-            var existingUser = new ClientUser { UserName = "existinguser", Email = "existinguser@example.com", CpfCnpj = "12345678901" };
+            var existingUser = _existingClientUser;
             SetupUserManagerWithUser(existingUser);
 
             // Act & Assert
@@ -337,7 +367,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignUp_UserCreationFails_ThrowsArgumentException()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = _newUser;
             SetupUserManagerWithIdentityResult(IdentityResult.Failed(new IdentityError { Description = "User registration failed." }));
             SetupUserManagerWithUser();
 
@@ -375,7 +405,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignUp_AddToAdminRoleFails_ThrowsArgumentException()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = _newUser;
             SetupUserManagerWithIdentityResult(IdentityResult.Success);
             _mockUserManager.Setup(um => um.AddToRoleAsync(It.IsAny<ClientUser>(), "Admin")).ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Failed to add user to admin role." }));
             _mockUserManager.Setup(um => um.CountUsersAsync()).ReturnsAsync(1);
@@ -390,7 +420,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task SignUp_AddToAdminRoleSuccess()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "newuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "newuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = _newUser;
             SetupUserManagerWithIdentityResult(IdentityResult.Success);
             _mockUserManager.Setup(um => um.CountUsersAsync()).ReturnsAsync(1);
             SetupUserManagerWithUser();
@@ -420,6 +450,56 @@ namespace FoodServiceApi.Tests.Core.Service
             Assert.NotNull(result);
             Assert.Equal("user1", result.User.UserName);
         }
+
+        [Fact(DisplayName = "SignIn - User Not Found")]
+        public async Task SignIn_UserNotFound_ThrowsArgumentException()
+        {
+            // Arrange
+            var signInDto = new SignInDto { Username = "nonexistinguser", Password = "Password123!" };
+            SetupUserManagerWithUser();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.SignIn(signInDto));
+            Assert.Equal("User not found.", exception.Message);
+        }
+
+        [Fact(DisplayName = "SignIn - Invalid Password")]
+        public async Task SignIn_InvalidPassword_ThrowsArgumentException()
+        {
+            // Arrange
+            var signInDto = new SignInDto { Username = "user1", Password = "WrongPassword123!" };
+            var user = new ClientUser { UserName = "user1", Email = "user1@example.com", Id = 1, CpfCnpj = "12345678901" };
+            SetupUserManagerWithUser(user: user);
+            _mockUserManager.Setup(um => um.CheckPasswordAsync(It.IsAny<UserBase>(), It.IsAny<string>())).ReturnsAsync(false);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _authService.SignIn(signInDto));
+            Assert.Equal("Invalid password.", exception.Message);
+        }
+
+        [Fact(DisplayName = "SignIn - Error")]
+        public async Task SignIn_Error_ThrowsException()
+        {
+            // Arrange
+            var signInDto = new SignInDto { Username = "user1", Password = "Password123!" };
+            _mockUserManager.Setup(um => um.FindByNameAsync(It.IsAny<string>())).ThrowsAsync(new Exception("Test exception"));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<Exception>(() => _authService.SignIn(signInDto));
+            Assert.Equal("Test exception", exception.Message);
+
+            // Verify that the logger was called with the appropriate error message
+            _mockLogger.Verify(
+                x => x.Log(
+                    LogLevel.Error,
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    exception,
+                    ((Func<It.IsAnyType, Exception, string>)It.IsAny<object>())!),
+                Times.Once
+            );
+        }
+
         #endregion
 
         #region GetCurrentUser
@@ -435,6 +515,29 @@ namespace FoodServiceApi.Tests.Core.Service
 
             // Assert
             Assert.Equal(user, result);
+        }
+
+        [Fact(DisplayName = "GetCurrentUser - Error")]
+        public async Task GetCurrentUser_Error_ThrowsException()
+        {
+            // Arrange
+            var user = new UserBase { UserName = "currentuser", Email = "currentuser@example.com", Id = 1, CpfCnpj = "12345678901" };
+            SetupHttpContextAccessor(user);
+            _mockUserManager.Setup(um => um.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ThrowsAsync(new Exception("Test exception"));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<Exception>(() => _authService.GetCurrentUser());
+
+            // Verify that the logger was called with the appropriate error message
+            _mockLogger.Verify(
+                x => x.Log(
+                    LogLevel.Error,
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    exception,
+                    ((Func<It.IsAnyType, Exception, string>)It.IsAny<object>())!),
+                Times.Once
+            );
         }
         #endregion
 
