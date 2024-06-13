@@ -1,4 +1,5 @@
-﻿using FoodService.Models.Auth.User;
+﻿using FoodService.Models.Auth.Role;
+using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
 using FoodServiceApi.Tests.TestsBase;
 using FoodServiceApi.Tests.Utility;
@@ -508,6 +509,41 @@ namespace FoodServiceApi.Tests.Core.Service
         }
         #endregion
 
+        #region AddUserToAdminRole
+        [Fact(DisplayName = "AddUserToAdminRole - Should add user to admin role successfully")]
+        public async Task AddUserToAdminRole_ShouldAddUserToRole()
+        {
+            // Arrange
+            int userId = 1;
+            var user = ClientUser;
+
+            SetupUserManagerWithUser(user);
+            SetupUserManagerWithIdentityResult(IdentityResult.Success);
+            SetupConfiguration();
+            SetupHttpContextAccessor(user);
+
+            // Act
+            await _authService.AddUserToAdminRole(userId);
+
+            // Assert
+            _mockUserManager.Verify(um => um.AddToRoleAsync(It.Is<UserBase>(u => u.Id == userId), "Admin"), Times.Once);
+            _mockUserManager.Verify(um => um.UpdateAsync(It.Is<UserBase>(u => u.Id == userId)), Times.Once);
+        }
+
+        [Fact(DisplayName = "AddUserToAdminRole - Should log error and rethrow when exception occurs in AddUserToAdminRole")]
+        public async Task AddUserToAdminRole_ShouldLogErrorOnException()
+        {
+            // Arrange
+            int userId = 1;
+            SetupUserManagerWithUser();
+            _mockUserManager.Setup(um => um.FindByIdAsync(It.IsAny<string>())).ThrowsAsync(new Exception("User not found"));
+
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<Exception>(() => _authService.AddUserToAdminRole(userId));
+            Assert.Equal("User not found", exception.Message);
+        }
+        #endregion
     }
 }
 

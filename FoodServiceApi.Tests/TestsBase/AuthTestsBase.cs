@@ -40,6 +40,7 @@ namespace FoodServiceApi.Tests.TestsBase
 
             ClientUser = new ClientUser
             {
+                Id = 1,
                 UserName = "user1",
                 Email = "user1@example.com",
                 CpfCnpj = "12345678901"

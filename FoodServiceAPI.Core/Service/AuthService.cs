@@ -225,14 +225,14 @@ namespace FoodServiceAPI.Core.Service
                 UserBase user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new ArgumentException("User not found.");
                 await _userManager.AddToRoleAsync(user, roleName);
 
-                if (propertyInfos != null)
-                {
-                    // Iterate over the boolean properties and set them to true for the user
-                    foreach (var property in propertyInfos)
-                    {
-                        property.SetValue(user, true);
-                    }
-                }
+                //if (propertyInfos != null)
+                //{
+                //    // Iterate over the boolean properties and set them to true for the user
+                //    foreach (var property in propertyInfos)
+                //    {
+                //        property.SetValue(property, true);
+                //    }
+                //}
 
                 // Update the user in the database
                 await _userManager.UpdateAsync(user);

@@ -9,7 +9,6 @@ using Moq;
 
 namespace FoodServiceApi.Tests.API.Controller
 {
-
     public class AuthControllerTests
     {
         private readonly AuthController _controller;
