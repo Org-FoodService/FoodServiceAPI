@@ -514,7 +514,7 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task AddUserToAdminRole_ShouldAddUserToRole()
         {
             // Arrange
-            int userId = 1;
+            int userId = ClientUser.Id;
             var user = ClientUser;
 
             SetupUserManagerWithUser(user);

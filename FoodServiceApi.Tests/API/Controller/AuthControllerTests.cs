@@ -1,6 +1,7 @@
 ﻿using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
 using FoodService.Models.Responses;
+using FoodServiceApi.Tests.TestsBase;
 using FoodServiceAPI.Controllers;
 using FoodServiceAPI.Core.Command.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Moq;
 
 namespace FoodServiceApi.Tests.API.Controller
 {
-    public class AuthControllerTests
+    public class AuthControllerTests : AuthTestsBase
     {
         private readonly AuthController _controller;
         private readonly Mock<IAuthCommand> _mockAuthCommand;
@@ -22,13 +23,47 @@ namespace FoodServiceApi.Tests.API.Controller
             _controller = new AuthController(_mockAuthCommand.Object, _mockLogger.Object);
         }
 
+        #region Setup Methods
+
+        private void SetupSignUpCommand(SignUpDto signUpDto, ResponseCommon<bool> response)
+        {
+            _mockAuthCommand.Setup(x => x.SignUp(signUpDto)).ReturnsAsync(response);
+        }
+
+        private void SetupSignInCommand(SignInDto signInDto, ResponseCommon<SsoDto> response)
+        {
+            _mockAuthCommand.Setup(x => x.SignIn(signInDto)).ReturnsAsync(response);
+        }
+
+        private void SetupAddUserToAdminRoleCommand(int userId, ResponseCommon<bool> response)
+        {
+            _mockAuthCommand.Setup(x => x.AddUserToAdminRole(userId)).ReturnsAsync(response);
+        }
+
+        private void SetupGetCurrentUserCommand(ResponseCommon<UserBase> response)
+        {
+            _mockAuthCommand.Setup(x => x.GetCurrentUser()).ReturnsAsync(response);
+        }
+
+        private void SetupListUsersCommand(ResponseCommon<List<ClientUser>> response)
+        {
+            _mockAuthCommand.Setup(x => x.ListUsers()).ReturnsAsync(response);
+        }
+
+        private void SetupGetUserDtoCommand(int userId, ResponseCommon<UserDto> response)
+        {
+            _mockAuthCommand.Setup(x => x.GetUserDto(userId)).ReturnsAsync(response);
+        }
+
+        #endregion
+
         [Fact(DisplayName = "SignUp - Success - Returns Ok with true value")]
         public async Task SignUp_Success_ReturnsOk()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "testuser", Password = "Password123!",ConfirmPassword= "Password123!", PhoneNumber = "11911112222", Email = "testuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = SignUpDto;
             var response = ResponseCommon<bool>.Success(true);
-            _mockAuthCommand.Setup(x => x.SignUp(signUpDto)).ReturnsAsync(response);
+            SetupSignUpCommand(signUpDto, response);
 
             // Act
             var result = await _controller.SignUp(signUpDto);
@@ -42,9 +77,9 @@ namespace FoodServiceApi.Tests.API.Controller
         public async Task SignUp_Failure_ReturnsStatusCode()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "testuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "testuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = SignUpDto;
             var response = ResponseCommon<bool>.Failure("Sign up failed", 400);
-            _mockAuthCommand.Setup(x => x.SignUp(signUpDto)).ReturnsAsync(response);
+            SetupSignUpCommand(signUpDto, response);
 
             // Act
             var result = await _controller.SignUp(signUpDto);
@@ -59,10 +94,10 @@ namespace FoodServiceApi.Tests.API.Controller
         public async Task SignIn_Success_ReturnsOk()
         {
             // Arrange
-            var signInDto = new SignInDto { Username = "testuser", Password = "Password123!" };
-            var ssoDto = new SsoDto("token", DateTime.Now.AddHours(1), new List<string> { "User" });
+            var signInDto = SignInDto;
+            var ssoDto = SsoDto;
             var response = ResponseCommon<SsoDto>.Success(ssoDto);
-            _mockAuthCommand.Setup(x => x.SignIn(signInDto)).ReturnsAsync(response);
+            SetupSignInCommand(signInDto, response);
 
             // Act
             var result = await _controller.SignIn(signInDto);
@@ -76,9 +111,9 @@ namespace FoodServiceApi.Tests.API.Controller
         public async Task SignIn_Failure_ReturnsStatusCode()
         {
             // Arrange
-            var signInDto = new SignInDto { Username = "testuser", Password = "Password123!" };
+            var signInDto = SignInDto;
             var response = ResponseCommon<SsoDto>.Failure("Sign in failed", 401);
-            _mockAuthCommand.Setup(x => x.SignIn(signInDto)).ReturnsAsync(response);
+            SetupSignInCommand(signInDto, response);
 
             // Act
             var result = await _controller.SignIn(signInDto);
@@ -95,7 +130,7 @@ namespace FoodServiceApi.Tests.API.Controller
             // Arrange
             int userId = 1;
             var response = ResponseCommon<bool>.Success(true);
-            _mockAuthCommand.Setup(x => x.AddUserToAdminRole(userId)).ReturnsAsync(response);
+            SetupAddUserToAdminRoleCommand(userId, response);
 
             // Act
             var result = await _controller.AddUserToAdminRole(userId);
@@ -111,7 +146,7 @@ namespace FoodServiceApi.Tests.API.Controller
             // Arrange
             int userId = 1;
             var response = ResponseCommon<bool>.Failure("Failed to add user to admin role", 400);
-            _mockAuthCommand.Setup(x => x.AddUserToAdminRole(userId)).ReturnsAsync(response);
+            SetupAddUserToAdminRoleCommand(userId, response);
 
             // Act
             var result = await _controller.AddUserToAdminRole(userId);
@@ -126,9 +161,9 @@ namespace FoodServiceApi.Tests.API.Controller
         public async Task GetCurrentUser_Success_ReturnsOk()
         {
             // Arrange
-            var user = new UserBase { UserName = "testuser", Email = "testuser@example.com", CpfCnpj = "12345678901" };
+            var user = UserBase;
             var response = ResponseCommon<UserBase>.Success(user);
-            _mockAuthCommand.Setup(x => x.GetCurrentUser()).ReturnsAsync(response);
+            SetupGetCurrentUserCommand(response);
 
             // Act
             var result = await _controller.GetCurrentUser();
@@ -143,7 +178,7 @@ namespace FoodServiceApi.Tests.API.Controller
         {
             // Arrange
             var response = ResponseCommon<UserBase>.Failure("Failed to get current user", 400);
-            _mockAuthCommand.Setup(x => x.GetCurrentUser()).ReturnsAsync(response);
+            SetupGetCurrentUserCommand(response);
 
             // Act
             var result = await _controller.GetCurrentUser();
@@ -160,11 +195,11 @@ namespace FoodServiceApi.Tests.API.Controller
             // Arrange
             var users = new List<ClientUser>
             {
-                new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" },
-                new ClientUser { UserName = "user2", Email = "user2@example.com", CpfCnpj = "11111111111" }
+                ClientUser,
+                ExistingClientUser
             };
             var response = ResponseCommon<List<ClientUser>>.Success(users);
-            _mockAuthCommand.Setup(x => x.ListUsers()).ReturnsAsync(response);
+            SetupListUsersCommand(response);
 
             // Act
             var result = await _controller.ListUsers();
@@ -179,7 +214,7 @@ namespace FoodServiceApi.Tests.API.Controller
         {
             // Arrange
             var response = ResponseCommon<List<ClientUser>>.Failure("Failed to list users", 400);
-            _mockAuthCommand.Setup(x => x.ListUsers()).ReturnsAsync(response);
+            SetupListUsersCommand(response);
 
             // Act
             var result = await _controller.ListUsers();
@@ -195,9 +230,9 @@ namespace FoodServiceApi.Tests.API.Controller
         {
             // Arrange
             int userId = 1;
-            var userDto = new UserDto { UserName = "testuser", Email = "testuser@example.com" };
+            var userDto = UserDto;
             var response = ResponseCommon<UserDto>.Success(userDto);
-            _mockAuthCommand.Setup(x => x.GetUserDto(userId)).ReturnsAsync(response);
+            SetupGetUserDtoCommand(userId, response);
 
             // Act
             var result = await _controller.GetUserDto(userId);
@@ -213,7 +248,7 @@ namespace FoodServiceApi.Tests.API.Controller
             // Arrange
             int userId = 1;
             var response = ResponseCommon<UserDto>.Failure("Failed to get user", 400);
-            _mockAuthCommand.Setup(x => x.GetUserDto(userId)).ReturnsAsync(response);
+            SetupGetUserDtoCommand(userId, response);
 
             // Act
             var result = await _controller.GetUserDto(userId);

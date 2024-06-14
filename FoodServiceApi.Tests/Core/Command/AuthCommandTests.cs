@@ -1,12 +1,14 @@
 ﻿using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
+using FoodServiceApi.Tests.TestsBase;
 using FoodServiceAPI.Core.Command;
 using FoodServiceAPI.Core.Service.Interface;
 using Moq;
+using Xunit;
 
 namespace FoodServiceApi.Tests.Core.Command
 {
-    public class AuthCommandTests
+    public class AuthCommandTests : AuthTestsBase
     {
         private readonly AuthCommand _authCommand;
         private readonly Mock<IAuthService> _mockAuthService;
@@ -28,6 +30,11 @@ namespace FoodServiceApi.Tests.Core.Command
             _mockAuthService.Setup(x => x.SignUp(signUpDto)).ThrowsAsync(new ArgumentException(message));
         }
 
+        private void SetupSignUpException(SignUpDto signUpDto)
+        {
+            _mockAuthService.Setup(x => x.SignUp(signUpDto)).ThrowsAsync(new Exception("Unexpected error"));
+        }
+
         private void SetupSignInSuccess(SignInDto signInDto, SsoDto ssoDto)
         {
             _mockAuthService.Setup(x => x.SignIn(signInDto)).ReturnsAsync(ssoDto);
@@ -36,6 +43,11 @@ namespace FoodServiceApi.Tests.Core.Command
         private void SetupSignInFailure(SignInDto signInDto, string message)
         {
             _mockAuthService.Setup(x => x.SignIn(signInDto)).ThrowsAsync(new ArgumentException(message));
+        }
+
+        private void SetupSignInException(SignInDto signInDto)
+        {
+            _mockAuthService.Setup(x => x.SignIn(signInDto)).ThrowsAsync(new Exception("Unexpected error"));
         }
 
         private void SetupAddUserToAdminRoleSuccess(int userId)
@@ -48,6 +60,11 @@ namespace FoodServiceApi.Tests.Core.Command
             _mockAuthService.Setup(x => x.AddUserToAdminRole(userId)).ThrowsAsync(new ArgumentException(message));
         }
 
+        private void SetupAddUserToAdminRoleException(int userId)
+        {
+            _mockAuthService.Setup(x => x.AddUserToAdminRole(userId)).ThrowsAsync(new Exception("Unexpected error"));
+        }
+
         private void SetupGetCurrentUserSuccess(UserBase user)
         {
             _mockAuthService.Setup(x => x.GetCurrentUser()).ReturnsAsync(user);
@@ -56,6 +73,11 @@ namespace FoodServiceApi.Tests.Core.Command
         private void SetupGetCurrentUserFailure(string message)
         {
             _mockAuthService.Setup(x => x.GetCurrentUser()).ThrowsAsync(new ArgumentException(message));
+        }
+
+        private void SetupGetCurrentUserException()
+        {
+            _mockAuthService.Setup(x => x.GetCurrentUser()).ThrowsAsync(new Exception("Unexpected error"));
         }
 
         private void SetupListUsersSuccess(List<ClientUser> users)
@@ -68,6 +90,11 @@ namespace FoodServiceApi.Tests.Core.Command
             _mockAuthService.Setup(x => x.ListUsers()).ThrowsAsync(new ArgumentException(message));
         }
 
+        private void SetupListUsersException()
+        {
+            _mockAuthService.Setup(x => x.ListUsers()).ThrowsAsync(new Exception("Unexpected error"));
+        }
+
         private void SetupGetUserDtoSuccess(int userId, UserDto userDto)
         {
             _mockAuthService.Setup(x => x.GetUserDto(userId)).ReturnsAsync(userDto);
@@ -77,13 +104,19 @@ namespace FoodServiceApi.Tests.Core.Command
         {
             _mockAuthService.Setup(x => x.GetUserDto(userId)).ThrowsAsync(new ArgumentException(message));
         }
+
+        private void SetupGetUserDtoException(int userId)
+        {
+            _mockAuthService.Setup(x => x.GetUserDto(userId)).ThrowsAsync(new Exception("Unexpected error"));
+        }
         #endregion
 
+        #region SignUp
         [Fact(DisplayName = "SignUp - Success")]
         public async Task SignUp_Success_ReturnsSuccessResponse()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "testuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "testuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = SignUpDto;
             SetupSignUpSuccess(signUpDto);
 
             // Act
@@ -98,7 +131,7 @@ namespace FoodServiceApi.Tests.Core.Command
         public async Task SignUp_ArgumentException_ReturnsFailureResponse()
         {
             // Arrange
-            var signUpDto = new SignUpDto { Username = "testuser", Password = "Password123!", ConfirmPassword = "Password123!", PhoneNumber = "11911112222", Email = "testuser@example.com", CpfCnpj = "12345678901" };
+            var signUpDto = SignUpDto;
             SetupSignUpFailure(signUpDto, "Invalid input");
 
             // Act
@@ -110,12 +143,30 @@ namespace FoodServiceApi.Tests.Core.Command
             Assert.Equal("Invalid input", response.Message);
         }
 
+        [Fact(DisplayName = "SignUp - Generic Exception Failure")]
+        public async Task SignUp_Exception_ReturnsFailureResponse()
+        {
+            // Arrange
+            var signUpDto = SignUpDto;
+            SetupSignUpException(signUpDto);
+
+            // Act
+            var response = await _authCommand.SignUp(signUpDto);
+
+            // Assert
+            Assert.False(response.IsSuccess);
+            Assert.Equal(500, response.StatusCode);
+            Assert.Equal("Unexpected error", response.Message);
+        }
+        #endregion
+
+        #region SignIn
         [Fact(DisplayName = "SignIn - Success")]
         public async Task SignIn_Success_ReturnsSuccessResponse()
         {
             // Arrange
-            var signInDto = new SignInDto { Username = "testuser", Password = "Password123!" };
-            var ssoDto = new SsoDto("token", DateTime.Now.AddHours(1), new List<string> { "User" });
+            var signInDto = SignInDto;
+            var ssoDto = SsoDto;
             SetupSignInSuccess(signInDto, ssoDto);
 
             // Act
@@ -131,7 +182,7 @@ namespace FoodServiceApi.Tests.Core.Command
         public async Task SignIn_ArgumentException_ReturnsFailureResponse()
         {
             // Arrange
-            var signInDto = new SignInDto { Username = "testuser", Password = "Password123!" };
+            var signInDto = SignInDto;
             SetupSignInFailure(signInDto, "Invalid credentials");
 
             // Act
@@ -143,6 +194,24 @@ namespace FoodServiceApi.Tests.Core.Command
             Assert.Equal("Invalid credentials", response.Message);
         }
 
+        [Fact(DisplayName = "SignIn - Generic Exception Failure")]
+        public async Task SignIn_Exception_ReturnsFailureResponse()
+        {
+            // Arrange
+            var signInDto = SignInDto;
+            SetupSignInException(signInDto);
+
+            // Act
+            var response = await _authCommand.SignIn(signInDto);
+
+            // Assert
+            Assert.False(response.IsSuccess);
+            Assert.Equal(500, response.StatusCode);
+            Assert.Equal("Unexpected error", response.Message);
+        }
+        #endregion
+
+        #region AddUserToAdminRole
         [Fact(DisplayName = "AddUserToAdminRole - Success")]
         public async Task AddUserToAdminRole_Success_ReturnsSuccessResponse()
         {
@@ -174,11 +243,29 @@ namespace FoodServiceApi.Tests.Core.Command
             Assert.Equal("User not found", response.Message);
         }
 
+        [Fact(DisplayName = "AddUserToAdminRole - Generic Exception Failure")]
+        public async Task AddUserToAdminRole_Exception_ReturnsFailureResponse()
+        {
+            // Arrange
+            int userId = 1;
+            SetupAddUserToAdminRoleException(userId);
+
+            // Act
+            var response = await _authCommand.AddUserToAdminRole(userId);
+
+            // Assert
+            Assert.False(response.IsSuccess);
+            Assert.Equal(500, response.StatusCode);
+            Assert.Equal("Unexpected error", response.Message);
+        }
+        #endregion
+
+        #region GetCurrentUser
         [Fact(DisplayName = "GetCurrentUser - Success")]
         public async Task GetCurrentUser_Success_ReturnsSuccessResponse()
         {
             // Arrange
-            var user = new UserBase { UserName = "testuser", Email = "testuser@example.com", CpfCnpj = "12345678901" };
+            var user = UserBase;
             SetupGetCurrentUserSuccess(user);
 
             // Act
@@ -205,14 +292,31 @@ namespace FoodServiceApi.Tests.Core.Command
             Assert.Equal("User not found", response.Message);
         }
 
+        [Fact(DisplayName = "GetCurrentUser - Generic Exception Failure")]
+        public async Task GetCurrentUser_Exception_ReturnsFailureResponse()
+        {
+            // Arrange
+            SetupGetCurrentUserException();
+
+            // Act
+            var response = await _authCommand.GetCurrentUser();
+
+            // Assert
+            Assert.False(response.IsSuccess);
+            Assert.Equal(500, response.StatusCode);
+            Assert.Equal("Unexpected error", response.Message);
+        }
+        #endregion
+
+        #region ListUsers
         [Fact(DisplayName = "ListUsers - Success")]
         public async Task ListUsers_Success_ReturnsSuccessResponse()
         {
             // Arrange
             var users = new List<ClientUser>
             {
-                new ClientUser { UserName = "user1", Email = "user1@example.com", CpfCnpj = "11111111111" },
-                new ClientUser { UserName = "user2", Email = "user2@example.com", CpfCnpj = "22222222222" },
+                ClientUser,
+                ExistingClientUser,
             };
             SetupListUsersSuccess(users);
 
@@ -240,12 +344,29 @@ namespace FoodServiceApi.Tests.Core.Command
             Assert.Equal("Failed to list users", response.Message);
         }
 
+        [Fact(DisplayName = "ListUsers - Generic Exception Failure")]
+        public async Task ListUsers_Exception_ReturnsFailureResponse()
+        {
+            // Arrange
+            SetupListUsersException();
+
+            // Act
+            var response = await _authCommand.ListUsers();
+
+            // Assert
+            Assert.False(response.IsSuccess);
+            Assert.Equal(500, response.StatusCode);
+            Assert.Equal("Unexpected error", response.Message);
+        }
+        #endregion
+
+        #region GetUserDto
         [Fact(DisplayName = "GetUserDto - Success")]
         public async Task GetUserDto_Success_ReturnsSuccessResponse()
         {
             // Arrange
             int userId = 1;
-            var userDto = new UserDto { UserName = "testuser", Email = "testuser@example.com" };
+            var userDto = UserDto;
             SetupGetUserDtoSuccess(userId, userDto);
 
             // Act
@@ -272,5 +393,22 @@ namespace FoodServiceApi.Tests.Core.Command
             Assert.Equal(400, response.StatusCode);
             Assert.Equal("User not found", response.Message);
         }
+
+        [Fact(DisplayName = "GetUserDto - Generic Exception Failure")]
+        public async Task GetUserDto_Exception_ReturnsFailureResponse()
+        {
+            // Arrange
+            int userId = 1;
+            SetupGetUserDtoException(userId);
+
+            // Act
+            var response = await _authCommand.GetUserDto(userId);
+
+            // Assert
+            Assert.False(response.IsSuccess);
+            Assert.Equal(500, response.StatusCode);
+            Assert.Equal("Unexpected error", response.Message);
+        }
+        #endregion
     }
 }
