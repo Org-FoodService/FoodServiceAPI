@@ -137,7 +137,7 @@ namespace FoodServiceAPI.Core.Service
             try
             {
                 ClientUser findUser = await _userRepository.GetByIdAsync(userId) ?? throw new ArgumentException("User not found.");
-                await _userRepository.DeleteAsync(findUser);
+                await _userRepository.DeleteAsync(findUser, findUser.Id);
                 return true;
             }
             catch (Exception ex)

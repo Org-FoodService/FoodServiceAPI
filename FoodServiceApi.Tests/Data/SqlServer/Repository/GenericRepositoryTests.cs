@@ -109,6 +109,58 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
 
         #endregion
 
+        #region DeleteAsync
+
+        [Fact(DisplayName = "DeleteAsync - Success")]
+        public async Task DeleteAsync_Success()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase_DeleteAsync_Success")
+                .Options;
+
+            using (var context = new TestDbContext(options))
+            {
+                var entity = new TestEntity { Id = 1 };
+                context.TestEntities.Add(entity);
+                context.SaveChanges();
+
+                var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
+
+                // Act
+                var result = await repository.DeleteAsync(entity, entity.Id);
+
+                // Assert
+                Assert.True(result); // Assuming the deletion was successful
+
+                var deletedEntity = await context.TestEntities.FindAsync(entity.Id);
+                Assert.Null(deletedEntity); // Ensure the entity was actually deleted
+            }
+        }
+
+        [Fact(DisplayName = "DeleteAsync - Entity Not Found")]
+        public async Task DeleteAsync_EntityNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase_DeleteAsync_EntityNotFound")
+                .Options;
+
+            using (var context = new TestDbContext(options))
+            {
+                var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
+
+                var entity = new TestEntity { Id = 1 };
+
+                // Act & Assert
+                var exception = await Assert.ThrowsAsync<KeyNotFoundException>(async () => await repository.DeleteAsync(entity, entity.Id));
+                Assert.Equal($"Entity not found", exception.Message);
+            }
+        }
+
+        #endregion
+
+        #region GetById and GetByIdAsync
 
         [Fact(DisplayName = "GetById - Success")]
         public void GetById_Success()
@@ -139,6 +191,34 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
             _mockSet.Verify(m => m.FindAsync(1), Times.Once);
             Assert.Equal(entity, result);
         }
+
+        [Fact(DisplayName = "GetById - Entity Not Found")]
+        public void GetById_EntityNotFound()
+        {
+            // Arrange
+            var id = 1;
+            _mockSet.Setup(m => m.Find(It.IsAny<int>())).Returns((TestEntity)null);
+
+            // Act & Assert
+            var exception = Assert.Throws<KeyNotFoundException>(() => _repository.GetById(id));
+            Assert.Equal($"Entity not found for ID: {id}", exception.Message);
+            _mockSet.Verify(m => m.Find(id), Times.Once);
+        }
+
+        [Fact(DisplayName = "GetByIdAsync - Entity Not Found")]
+        public async Task GetByIdAsync_EntityNotFound()
+        {
+            // Arrange
+            var id = 1;
+            _mockSet.Setup(m => m.FindAsync(It.IsAny<int>())).ReturnsAsync((TestEntity)null);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<KeyNotFoundException>(async () => await _repository.GetByIdAsync(id));
+            Assert.Equal($"Entity not found for ID: {id}", exception.Message);
+            _mockSet.Verify(m => m.FindAsync(id), Times.Once);
+        }
+
+        #endregion
 
         [Fact(DisplayName = "ListAll - Success")]
         public void ListAll_Success()

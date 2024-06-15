@@ -5,7 +5,7 @@
         where TKey : struct
     {
         Task<T> CreateAsync(T entity);
-        Task<bool> DeleteAsync(T entity);
+        Task<bool> DeleteAsync(T entity, TKey id);
         T GetById(TKey id);
         Task<T> GetByIdAsync(TKey id);
         Task<int> UpdateAsync(T entity, TKey id);

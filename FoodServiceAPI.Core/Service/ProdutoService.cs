@@ -42,7 +42,7 @@ namespace FoodServiceAPI.Core.Service
             if (product == null)
                 return false;
 
-            return await _repository.DeleteAsync(product);
+            return await _repository.DeleteAsync(product, product.Id);
         }
 
         /// <summary>

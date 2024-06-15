@@ -64,12 +64,21 @@ namespace FoodServiceAPI.Data.SqlServer.Repository
         /// <summary>
         /// Deletes an entity asynchronously.
         /// </summary>
-        public virtual async Task<bool> DeleteAsync(T entity)
+        public virtual async Task<bool> DeleteAsync(T entity, TKey id)
         {
             _logger.LogInformation("Deleting an entity.");
-            EntityEntry<T>? entry = _context.Entry(entity) ?? throw new KeyNotFoundException("Entity not found");
+
+            // Check if the entity exists in the database
+            var existingEntity = await _context.Set<T>().FindAsync(id);
+            if (existingEntity == null)
+            {
+                throw new KeyNotFoundException("Entity not found");
+            }
+
+            EntityEntry<T>? entry = _context.Entry(existingEntity);
             entry.State = EntityState.Deleted;
             await _context.SaveChangesAsync();
+
             _logger.LogInformation("Entity deleted successfully.");
             return true;
         }
