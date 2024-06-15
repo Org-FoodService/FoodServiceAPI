@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -35,22 +37,25 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: "TestDatabase_CreateAsync_Success")
                 .Options;
 
-            var context = new TestDbContext(options);
-            var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
+            using (var context = new TestDbContext(options))
+            {
+                var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
 
-            var entity = new TestEntity { Id = 1 };
+                var entity = new TestEntity { Id = 1 };
 
-            // Act
-            var result = await repository.CreateAsync(entity);
+                // Act
+                var result = await repository.CreateAsync(entity);
 
-            // Assert
-            var addedEntity = await context.TestEntities.FindAsync(entity.Id);
-            Assert.Equal(entity, addedEntity);
-            Assert.Equal(entity, result);
+                // Assert
+                var addedEntity = await context.TestEntities.FindAsync(entity.Id);
+                Assert.Equal(entity, addedEntity);
+                Assert.Equal(entity, result);
+            }
         }
+
 
         [Fact(DisplayName = "GetById - Success")]
         public void GetById_Success()
@@ -82,6 +87,37 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
             Assert.Equal(entity, result);
         }
 
+        [Fact(DisplayName = "ListAll - Success")]
+        public void ListAll_Success()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+
+            using (var context = new TestDbContext(options))
+            {
+                var data = new List<TestEntity>
+                {
+                    new TestEntity { Id = 1 },
+                    new TestEntity { Id = 2 }
+                };
+
+                context.TestEntities.AddRange(data);
+                context.SaveChanges();
+
+                var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
+
+                // Act
+                var result = repository.ListAll().ToList();
+
+                // Assert
+                Assert.Equal(2, result.Count);
+                Assert.Contains(result, r => r.Id == 1);
+                Assert.Contains(result, r => r.Id == 2);
+            }
+        }
+
         public class TestGenericRepository : GenericRepository<TestEntity, int>
         {
             public TestGenericRepository(AppDbContext context, ILogger<GenericRepository<TestEntity, int>> logger)
@@ -103,6 +139,15 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
             }
 
             public DbSet<TestEntity> TestEntities { get; set; }
+
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                // Ensure the primary key is configured
+                modelBuilder.Entity<TestEntity>()
+                    .HasKey(te => te.Id);
+            }
         }
     }
 }
