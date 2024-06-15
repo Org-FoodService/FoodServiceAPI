@@ -116,15 +116,6 @@ namespace FoodServiceAPI.Data.SqlServer.Repository
         }
 
         /// <summary>
-        /// Returns a queryable collection of entities.
-        /// </summary>
-        public virtual IQueryable<T> Query()
-        {
-            _logger.LogInformation("Querying entities.");
-            return _context.Set<T>().AsNoTracking();
-        }
-
-        /// <summary>
         /// Returns a queryable collection of all entities.
         /// </summary>
         public virtual IQueryable<T> ListAll()

@@ -9,7 +9,6 @@
         T GetById(TKey id);
         Task<T> GetByIdAsync(TKey id);
         Task<int> InsertOrUpdateAsync(T entity);
-        IQueryable<T> Query();
         Task<int> UpdateAsync(T entity);
         IQueryable<T> ListAll();
     }

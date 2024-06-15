@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -30,6 +28,28 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
             _repository = new TestGenericRepository(_mockContext.Object, _mockLogger.Object);
 
             _mockContext.Setup(m => m.Set<TestEntity>()).Returns(_mockSet.Object);
+        }
+
+        [Fact(DisplayName = "CreateAsync - Success")]
+        public async Task CreateAsync_Success()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+
+            var context = new TestDbContext(options);
+            var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
+
+            var entity = new TestEntity { Id = 1 };
+
+            // Act
+            var result = await repository.CreateAsync(entity);
+
+            // Assert
+            var addedEntity = await context.TestEntities.FindAsync(entity.Id);
+            Assert.Equal(entity, addedEntity);
+            Assert.Equal(entity, result);
         }
 
         [Fact(DisplayName = "GetById - Success")]
@@ -74,6 +94,7 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
         {
             public int Id { get; set; }
         }
+
         public class TestDbContext : AppDbContext
         {
             public TestDbContext(DbContextOptions<AppDbContext> options)
