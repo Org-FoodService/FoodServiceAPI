@@ -57,7 +57,7 @@ namespace FoodServiceAPI.Core.Service
 
             existingOrder.OrderItems = Order.OrderItems;
 
-            await _repository.UpdateAsync(existingOrder);
+            await _repository.UpdateAsync(existingOrder, existingOrder.OrderId);
             return existingOrder;
         }
     }

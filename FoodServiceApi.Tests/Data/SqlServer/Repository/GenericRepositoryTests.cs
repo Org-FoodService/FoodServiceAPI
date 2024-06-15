@@ -56,6 +56,59 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
             }
         }
 
+        #region UpdateAsync
+
+        [Fact(DisplayName = "UpdateAsync - Success")]
+        public async Task UpdateAsync_Success()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase_UpdateAsync_Success")
+                .Options;
+
+            using (var context = new TestDbContext(options))
+            {
+                var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
+
+                var entity = new TestEntity { Id = 1, SomeProperty = "Initial Value" };
+                context.TestEntities.Add(entity);
+                await context.SaveChangesAsync();
+
+                // Modify the entity
+                entity.SomeProperty = "Updated Value";
+
+                // Act
+                var result = await repository.UpdateAsync(entity, entity.Id);
+
+                // Assert
+                Assert.Equal(1, result); // Assuming 1 entity was updated
+
+                var updatedEntity = await context.TestEntities.FindAsync(entity.Id);
+                Assert.Equal(entity.SomeProperty, updatedEntity!.SomeProperty);
+            }
+        }
+
+        [Fact(DisplayName = "UpdateAsync - Entity Not Found")]
+        public async Task UpdateAsync_EntityNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase_UpdateAsync_EntityNotFound")
+                .Options;
+
+            using (var context = new TestDbContext(options))
+            {
+                var repository = new TestGenericRepository(context, new LoggerFactory().CreateLogger<TestGenericRepository>());
+
+                var entity = new TestEntity { Id = 1 };
+
+                // Act & Assert
+                await Assert.ThrowsAsync<KeyNotFoundException>(async () => await repository.UpdateAsync(entity, entity.Id));
+            }
+        }
+
+        #endregion
+
 
         [Fact(DisplayName = "GetById - Success")]
         public void GetById_Success()
@@ -129,6 +182,7 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
         public class TestEntity
         {
             public int Id { get; set; }
+            public string? SomeProperty { get; set; }
         }
 
         public class TestDbContext : AppDbContext

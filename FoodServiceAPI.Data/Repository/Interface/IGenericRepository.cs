@@ -8,8 +8,7 @@
         Task<bool> DeleteAsync(T entity);
         T GetById(TKey id);
         Task<T> GetByIdAsync(TKey id);
-        Task<int> InsertOrUpdateAsync(T entity);
-        Task<int> UpdateAsync(T entity);
+        Task<int> UpdateAsync(T entity, TKey id);
         IQueryable<T> ListAll();
     }
 }

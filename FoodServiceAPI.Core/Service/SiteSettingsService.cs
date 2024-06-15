@@ -63,7 +63,7 @@ namespace FoodServiceAPI.Core.Service
             existingSiteSettings.SecondaryColor = siteSettings.SecondaryColor;
             existingSiteSettings.BackgroundColor = siteSettings.BackgroundColor;
 
-            await _repository.UpdateAsync(existingSiteSettings);
+            await _repository.UpdateAsync(existingSiteSettings, existingSiteSettings.Id);
             _logger.LogInformation("Site settings updated successfully.");
             return existingSiteSettings;
         }

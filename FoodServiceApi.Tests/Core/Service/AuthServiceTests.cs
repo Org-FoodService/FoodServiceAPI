@@ -51,7 +51,7 @@ namespace FoodServiceApi.Tests.Core.Service
             else
                 _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))!.ReturnsAsync(users.First());
 
-            _mockUserRepository.Setup(repo => repo.UpdateAsync(It.IsAny<ClientUser>())).ReturnsAsync(1);
+            _mockUserRepository.Setup(repo => repo.UpdateAsync(It.IsAny<ClientUser>(), It.IsAny<int>())).ReturnsAsync(1);
             _mockUserRepository.Setup(repo => repo.DeleteAsync(It.IsAny<ClientUser>())).ReturnsAsync(true);
         }
 

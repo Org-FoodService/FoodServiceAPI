@@ -118,7 +118,7 @@ namespace FoodServiceAPI.Core.Service
                 ClientUser findUser = await _userRepository.GetByIdAsync(user.Id) ?? throw new ArgumentException("User not found.");
                 findUser.Email = user.Email;
                 findUser.UserName = user.UserName;
-                return await _userRepository.UpdateAsync(findUser);
+                return await _userRepository.UpdateAsync(findUser, findUser.Id);
             }
             catch (Exception ex)
             {
