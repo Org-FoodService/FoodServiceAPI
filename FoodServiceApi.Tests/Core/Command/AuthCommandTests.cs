@@ -8,7 +8,7 @@ using Xunit;
 
 namespace FoodServiceApi.Tests.Core.Command
 {
-    public class AuthCommandTests : AuthTestsBase
+    public class AuthCommandTests : AuthTestsHelper
     {
         private readonly AuthCommand _authCommand;
         private readonly Mock<IAuthService> _mockAuthService;

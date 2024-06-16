@@ -15,7 +15,7 @@ using System.Security.Claims;
 
 namespace FoodServiceApi.Tests.Core.Service
 {
-    public class AuthServiceTests : AuthTestsBase
+    public class AuthServiceTests : AuthTestsHelper
     {
         private readonly AuthService _authService;
         private readonly Mock<ILogger<AuthService>> _mockLogger;

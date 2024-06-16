@@ -10,7 +10,7 @@ using Moq;
 
 namespace FoodServiceApi.Tests.API.Controller
 {
-    public class AuthControllerTests : AuthTestsBase
+    public class AuthControllerTests : AuthTestsHelper
     {
         private readonly AuthController _controller;
         private readonly Mock<IAuthCommand> _mockAuthCommand;

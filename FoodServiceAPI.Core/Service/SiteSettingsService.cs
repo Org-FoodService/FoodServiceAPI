@@ -25,7 +25,7 @@ namespace FoodServiceAPI.Core.Service
         /// Retrieves a siteSettings by its ID asynchronously.
         /// </summary>
         /// <returns>The retrieved siteSettings.</returns>
-        public async Task<SiteSettings> GetSiteSettingsAsync()
+        public async Task<SiteSettings?> GetSiteSettingsAsync()
         {
             _logger.LogInformation("Attempting to retrieve site settings.");
             var siteSettings = await _repository.GetByIdAsync(1);

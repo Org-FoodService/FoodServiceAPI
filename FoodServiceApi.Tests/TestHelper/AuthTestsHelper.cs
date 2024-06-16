@@ -3,7 +3,7 @@ using FoodService.Models.Dto;
 
 namespace FoodServiceApi.Tests.TestsBase
 {
-    public class AuthTestsBase
+    public class AuthTestsHelper
     {
         protected readonly SsoDto SsoDto;
         protected readonly SignUpDto SignUpDto;
@@ -14,7 +14,7 @@ namespace FoodServiceApi.Tests.TestsBase
         protected readonly ClientUser ClientUser;
         protected readonly ClientUser ExistingClientUser;
 
-        protected AuthTestsBase()
+        protected AuthTestsHelper()
         {
             var commonPassword = "Password123!";
             var commonCpfCnpj = "12345678901";
