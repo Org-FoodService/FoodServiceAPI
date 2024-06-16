@@ -7,9 +7,11 @@ using FoodServiceAPI.Core.Command.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.API.Controller
 {
+    [ExcludeFromCodeCoverage]
     public class AuthControllerTests : AuthTestsHelper
     {
         private readonly AuthController _controller;

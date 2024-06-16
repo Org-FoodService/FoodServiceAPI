@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace FoodServiceApi.Tests.Utility
 {
-
+    [ExcludeFromCodeCoverage]
     public class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
     {
         public TestAsyncEnumerable(IEnumerable<T> enumerable)

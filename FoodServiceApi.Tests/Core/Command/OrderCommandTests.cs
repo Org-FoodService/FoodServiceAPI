@@ -3,9 +3,11 @@ using FoodServiceApi.Tests.TestsBase;
 using FoodServiceAPI.Core.Command;
 using FoodServiceAPI.Core.Service.Interface;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class OrderCommandTests
     {
         private readonly Mock<IOrderService> _mockOrderService;

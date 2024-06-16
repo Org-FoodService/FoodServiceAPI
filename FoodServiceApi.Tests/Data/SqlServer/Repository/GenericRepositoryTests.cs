@@ -1,16 +1,13 @@
-﻿using FoodServiceAPI.Data.SqlServer.Context;
-using FoodServiceAPI.Data.SqlServer.Repository;
+﻿using FoodServiceApi.Tests.Data.SqlServer.Context;
+using FoodServiceAPI.Data.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.Data.SqlServer.Repository
 {
+    [ExcludeFromCodeCoverage]
     public class GenericRepositoryTests
     {
         private readonly Mock<DbSet<TestEntity>> _mockSet;
@@ -248,39 +245,6 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
                 Assert.Equal(2, result.Count);
                 Assert.Contains(result, r => r.Id == 1);
                 Assert.Contains(result, r => r.Id == 2);
-            }
-        }
-
-        public class TestGenericRepository : GenericRepository<TestEntity, int>
-        {
-            public TestGenericRepository(AppDbContext context, ILogger<GenericRepository<TestEntity, int>> logger)
-                : base(context, logger)
-            {
-            }
-        }
-
-        public class TestEntity
-        {
-            public int Id { get; set; }
-            public string? SomeProperty { get; set; }
-        }
-
-        public class TestDbContext : AppDbContext
-        {
-            public TestDbContext(DbContextOptions<AppDbContext> options)
-                : base(options)
-            {
-            }
-
-            public DbSet<TestEntity> TestEntities { get; set; }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                base.OnModelCreating(modelBuilder);
-
-                // Ensure the primary key is configured
-                modelBuilder.Entity<TestEntity>()
-                    .HasKey(te => te.Id);
             }
         }
     }

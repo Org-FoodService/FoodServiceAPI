@@ -4,10 +4,12 @@ using FoodServiceApi.Tests.TestsBase;
 using FoodServiceAPI.Core.Command;
 using FoodServiceAPI.Core.Service.Interface;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace FoodServiceApi.Tests.Core.Command
 {
+    [ExcludeFromCodeCoverage]
     public class AuthCommandTests : AuthTestsHelper
     {
         private readonly AuthCommand _authCommand;

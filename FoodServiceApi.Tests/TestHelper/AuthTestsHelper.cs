@@ -1,8 +1,10 @@
 ﻿using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.TestsBase
 {
+    [ExcludeFromCodeCoverage]
     public class AuthTestsHelper
     {
         protected readonly SsoDto SsoDto;

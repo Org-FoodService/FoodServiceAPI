@@ -3,9 +3,11 @@ using FoodService.Models.Responses;
 using FoodServiceAPI.Core.Command.Interface;
 using FoodServiceAPI.Core.Service.Interface;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.TestsBase
 {
+    [ExcludeFromCodeCoverage]
     public static class OrderTestHelper
     {
         public static readonly Order Order = new Order

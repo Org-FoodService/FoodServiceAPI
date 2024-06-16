@@ -6,9 +6,11 @@ using FoodServiceAPI.Controllers;
 using FoodServiceAPI.Core.Command.Interface;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.API.Controller
 {
+    [ExcludeFromCodeCoverage]
     public class OrderControllerTests
     {
         protected readonly OrderController _controller;

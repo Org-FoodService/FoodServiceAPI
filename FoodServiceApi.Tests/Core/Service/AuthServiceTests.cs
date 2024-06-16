@@ -11,10 +11,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace FoodServiceApi.Tests.Core.Service
 {
+    [ExcludeFromCodeCoverage]
     public class AuthServiceTests : AuthTestsHelper
     {
         private readonly AuthService _authService;
