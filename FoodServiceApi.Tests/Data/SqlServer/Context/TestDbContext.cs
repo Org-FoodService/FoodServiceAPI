@@ -1,8 +1,10 @@
 ﻿using FoodServiceAPI.Data.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.Data.SqlServer.Context
 {
+    [ExcludeFromCodeCoverage]
     public class TestDbContext : AppDbContext
     {
         public TestDbContext(DbContextOptions<AppDbContext> options)

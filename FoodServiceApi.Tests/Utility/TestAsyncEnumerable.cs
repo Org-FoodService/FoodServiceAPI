@@ -49,6 +49,7 @@ namespace FoodServiceApi.Tests.Utility
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> _innerEnumerator;
@@ -72,6 +73,7 @@ namespace FoodServiceApi.Tests.Utility
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
     {
         private readonly IQueryProvider _inner;
