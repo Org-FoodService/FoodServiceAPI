@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FoodServiceApi.Tests.TestsBase
 {
     [ExcludeFromCodeCoverage]
-    public class AuthTestsHelper
+    public class AuthTestHelper
     {
         protected readonly SsoDto SsoDto;
         protected readonly SignUpDto SignUpDto;
@@ -16,7 +16,7 @@ namespace FoodServiceApi.Tests.TestsBase
         protected readonly ClientUser ClientUser;
         protected readonly ClientUser ExistingClientUser;
 
-        protected AuthTestsHelper()
+        protected AuthTestHelper()
         {
             var commonPassword = "Password123!";
             var commonCpfCnpj = "12345678901";

@@ -12,7 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FoodServiceApi.Tests.API.Controller
 {
     [ExcludeFromCodeCoverage]
-    public class AuthControllerTests : AuthTestsHelper
+    public class AuthControllerTests : AuthTestHelper
     {
         private readonly AuthController _controller;
         private readonly Mock<IAuthCommand> _mockAuthCommand;
