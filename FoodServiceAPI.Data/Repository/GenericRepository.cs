@@ -42,37 +42,43 @@ namespace FoodServiceAPI.Data.SqlServer.Repository
         /// <summary>
         /// Updates an existing entity asynchronously.
         /// </summary>
-        public virtual async Task<int> UpdateAsync(T entity)
+        public virtual async Task<int> UpdateAsync(T entity, TKey id)
         {
             _logger.LogInformation("Updating an entity.");
-            EntityEntry<T>? entry = _context.Entry(entity) ?? throw new KeyNotFoundException("Entity not found");
-            entry.State = EntityState.Modified;
+
+            // Check if the entity exists in the database
+            var existingEntity = await _context.Set<T>().FindAsync(id);
+            if (existingEntity == null)
+            {
+                throw new KeyNotFoundException("Entity not found");
+            }
+
+            _context.Entry(existingEntity).CurrentValues.SetValues(entity);
             int result = await _context.SaveChangesAsync();
+
             _logger.LogInformation("Entity updated successfully.");
             return result;
         }
 
-        /// <summary>
-        /// Inserts or updates an entity asynchronously.
-        /// </summary>
-        public virtual async Task<int> InsertOrUpdateAsync(T entity)
-        {
-            _logger.LogInformation("Inserting or updating an entity.");
-            _context.Update(entity);
-            int result = await _context.SaveChangesAsync();
-            _logger.LogInformation("Entity inserted or updated successfully.");
-            return result;
-        }
 
         /// <summary>
         /// Deletes an entity asynchronously.
         /// </summary>
-        public virtual async Task<bool> DeleteAsync(T entity)
+        public virtual async Task<bool> DeleteAsync(T entity, TKey id)
         {
             _logger.LogInformation("Deleting an entity.");
-            EntityEntry<T>? entry = _context.Entry(entity) ?? throw new KeyNotFoundException("Entity not found");
+
+            // Check if the entity exists in the database
+            var existingEntity = await _context.Set<T>().FindAsync(id);
+            if (existingEntity == null)
+            {
+                throw new KeyNotFoundException("Entity not found");
+            }
+
+            EntityEntry<T>? entry = _context.Entry(existingEntity);
             entry.State = EntityState.Deleted;
             await _context.SaveChangesAsync();
+
             _logger.LogInformation("Entity deleted successfully.");
             return true;
         }
@@ -113,15 +119,6 @@ namespace FoodServiceAPI.Data.SqlServer.Repository
                 _logger.LogInformation("Entity retrieved successfully for ID: {Id}.", id);
             }
             return entity;
-        }
-
-        /// <summary>
-        /// Returns a queryable collection of entities.
-        /// </summary>
-        public virtual IQueryable<T> Query()
-        {
-            _logger.LogInformation("Querying entities.");
-            return _context.Set<T>().AsNoTracking();
         }
 
         /// <summary>

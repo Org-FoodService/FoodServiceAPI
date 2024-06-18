@@ -5,12 +5,10 @@
         where TKey : struct
     {
         Task<T> CreateAsync(T entity);
-        Task<bool> DeleteAsync(T entity);
+        Task<bool> DeleteAsync(T entity, TKey id);
         T GetById(TKey id);
         Task<T> GetByIdAsync(TKey id);
-        Task<int> InsertOrUpdateAsync(T entity);
-        IQueryable<T> Query();
-        Task<int> UpdateAsync(T entity);
+        Task<int> UpdateAsync(T entity, TKey id);
         IQueryable<T> ListAll();
     }
 }

@@ -36,7 +36,7 @@ namespace FoodServiceAPI.Core.Service
             if (order == null)
                 return false;
 
-            return await _repository.DeleteAsync(order);
+            return await _repository.DeleteAsync(order, order.OrderId);
         }
 
         public async Task<List<Order>> GetAllOrder()
@@ -57,7 +57,7 @@ namespace FoodServiceAPI.Core.Service
 
             existingOrder.OrderItems = Order.OrderItems;
 
-            await _repository.UpdateAsync(existingOrder);
+            await _repository.UpdateAsync(existingOrder, existingOrder.OrderId);
             return existingOrder;
         }
     }
