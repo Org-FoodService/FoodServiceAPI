@@ -1,6 +1,6 @@
 ﻿using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
-using FoodServiceApi.Tests.TestsBase;
+using FoodServiceApi.Tests.TestHelper;
 using FoodServiceAPI.Core.Command;
 using FoodServiceAPI.Core.Service.Interface;
 using Moq;

@@ -1,15 +1,13 @@
 ﻿using FoodService.Models.Entities;
 using FoodServiceAPI.Core.Service;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
-using FoodServiceApi.Tests.TestsBase;
 using Moq;
-using Xunit;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
+using FoodServiceApi.Tests.TestHelper;
+using System.Diagnostics.CodeAnalysis;
 
-namespace FoodServiceApi.Tests.Tests
+namespace FoodServiceApi.Tests.Core.Service
 {
+    [ExcludeFromCodeCoverage]
     public class OrderServiceTests
     {
         private readonly Mock<IOrderRepository> _mockOrderRepository;

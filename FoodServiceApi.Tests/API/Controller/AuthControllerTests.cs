@@ -1,7 +1,7 @@
 ﻿using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
 using FoodService.Models.Responses;
-using FoodServiceApi.Tests.TestsBase;
+using FoodServiceApi.Tests.TestHelper;
 using FoodServiceAPI.Controllers;
 using FoodServiceAPI.Core.Command.Interface;
 using Microsoft.AspNetCore.Mvc;

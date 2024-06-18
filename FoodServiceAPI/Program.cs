@@ -18,7 +18,7 @@ string? sqlConnection = builder.Configuration.GetConnectionString("DefaultConnec
 builder.Services.ConfigureDatabase(sqlConnection!);
 builder.Services.UpdateMigrationDatabase();
 
-builder.Services.ConfigureAuthentication(builder);
+builder.Services.ConfigureAuthentication(builder.Configuration);
 
 // Add IOC
 builder.Services.ConfigureRepositoryIoc();

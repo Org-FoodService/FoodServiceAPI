@@ -1,7 +1,7 @@
 ﻿using FoodService.Models.Auth.Role;
 using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
-using FoodServiceApi.Tests.TestsBase;
+using FoodServiceApi.Tests.TestHelper;
 using FoodServiceApi.Tests.Utility;
 using FoodServiceAPI.Core.Service;
 using FoodServiceAPI.Core.Wrapper.Interface;

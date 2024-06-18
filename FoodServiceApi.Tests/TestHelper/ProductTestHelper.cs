@@ -6,9 +6,11 @@ using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using FoodServiceApi.Tests.Utility;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FoodServiceApi.Tests.TestHelper
 {
+    [ExcludeFromCodeCoverage]
     public static class ProductTestHelper
     {
         public static readonly Product Product = new Product
@@ -91,9 +93,9 @@ namespace FoodServiceApi.Tests.TestHelper
             mockProductRepository.Setup(x => x.ListAll()).Returns(productDbSet);
         }
 
-        public static void SetupGetByIdProductRepository(this Mock<IProductRepository> mockProductRepository, int id, Product product)
+        public static void SetupGetByIdProductRepository(this Mock<IProductRepository> mockProductRepository, int id, Product? product)
         {
-            mockProductRepository.Setup(x => x.GetByIdAsync(id)).ReturnsAsync(product);
+            mockProductRepository.Setup(x => x.GetByIdAsync(id))!.ReturnsAsync(product);
         }
 
         public static void SetupCreateProductRepository(this Mock<IProductRepository> mockProductRepository, Product product, Product createdProduct)

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
 using FoodServiceApi.Tests.TestHelper;
-using Microsoft.AspNetCore.Http;
 
 namespace FoodServiceApi.Tests.API.Controller
 {

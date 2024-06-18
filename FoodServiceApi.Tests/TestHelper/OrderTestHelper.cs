@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodServiceApi.Tests.TestsBase
+namespace FoodServiceApi.Tests.TestHelper
 {
     [ExcludeFromCodeCoverage]
     public static class OrderTestHelper
@@ -104,9 +104,9 @@ namespace FoodServiceApi.Tests.TestsBase
             mockOrderRepository.Setup(x => x.ListAll()).Returns(orderDbSet);
         }
 
-        public static void SetupGetByIdOrderRepository(this Mock<IOrderRepository> mockOrderRepository, int id, Order order)
+        public static void SetupGetByIdOrderRepository(this Mock<IOrderRepository> mockOrderRepository, int id, Order? order)
         {
-            mockOrderRepository.Setup(x => x.GetByIdAsync(id)).ReturnsAsync(order);
+            mockOrderRepository.Setup(x => x.GetByIdAsync(id))!.ReturnsAsync(order);
         }
 
         public static void SetupCreateOrderRepository(this Mock<IOrderRepository> mockOrderRepository, Order order, Order createdOrder)

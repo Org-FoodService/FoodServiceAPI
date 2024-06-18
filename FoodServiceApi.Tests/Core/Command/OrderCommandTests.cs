@@ -1,11 +1,11 @@
 ﻿using FoodService.Models.Entities;
-using FoodServiceApi.Tests.TestsBase;
+using FoodServiceApi.Tests.TestHelper;
 using FoodServiceAPI.Core.Command;
 using FoodServiceAPI.Core.Service.Interface;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodServiceApi.Tests.Tests
+namespace FoodServiceApi.Tests.Core.Command
 {
     [ExcludeFromCodeCoverage]
     public class OrderCommandTests
@@ -102,7 +102,7 @@ namespace FoodServiceApi.Tests.Tests
         {
             // Arrange
             var updatedOrder = OrderTestHelper.Order;
-            updatedOrder.OrderItems = new() { new() { Comment = "newComment" } } ;
+            updatedOrder.OrderItems = new() { new() { Comment = "newComment" } };
             _mockOrderService.SetupUpdateOrderService(updatedOrder);
 
             // Act

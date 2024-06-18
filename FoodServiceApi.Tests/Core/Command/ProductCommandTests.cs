@@ -1,14 +1,8 @@
 ﻿using FoodService.Models.Entities;
 using FoodServiceAPI.Core.Command;
 using FoodServiceAPI.Core.Service.Interface;
-using FoodServiceApi.Tests.TestsBase;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FoodServiceApi.Tests.TestHelper;
 
 namespace FoodServiceApi.Tests.Core.Command
@@ -142,7 +136,7 @@ namespace FoodServiceApi.Tests.Core.Command
         {
             // Arrange
             var productId = ProductTestHelper.Product.Id;
-            _mockProductService.SetupGetProductByIdService(productId, ProductTestHelper.Product); // Ensure product exists
+            _mockProductService.SetupGetProductByIdService(productId, ProductTestHelper.Product); 
             _mockProductService.SetupDeleteProductService(productId, true);
 
             // Act

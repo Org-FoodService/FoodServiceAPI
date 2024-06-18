@@ -2,7 +2,7 @@
 using FoodService.Models.Dto;
 using System.Diagnostics.CodeAnalysis;
 
-namespace FoodServiceApi.Tests.TestsBase
+namespace FoodServiceApi.Tests.TestHelper
 {
     [ExcludeFromCodeCoverage]
     public class AuthTestHelper
@@ -38,10 +38,10 @@ namespace FoodServiceApi.Tests.TestsBase
                 Username = "user1",
                 Password = commonPassword
             };
-            UserDto = new UserDto 
-            { 
-                UserName = "userdto", 
-                Email = $"userdto{commonEmailDomain}" 
+            UserDto = new UserDto
+            {
+                UserName = "userdto",
+                Email = $"userdto{commonEmailDomain}"
             };
 
             UserBase = new UserBase

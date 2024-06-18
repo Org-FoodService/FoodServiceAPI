@@ -1,12 +1,12 @@
 ﻿using FoodService.Models.Entities;
 using FoodService.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
-using FoodServiceApi.Tests.TestsBase;
 using FoodServiceAPI.Controllers;
 using FoodServiceAPI.Core.Command.Interface;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
+using FoodServiceApi.Tests.TestHelper;
 
 namespace FoodServiceApi.Tests.API.Controller
 {
