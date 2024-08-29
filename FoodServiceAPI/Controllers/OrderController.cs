@@ -60,7 +60,10 @@ namespace FoodServiceAPI.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ResponseCommon<Order>), 200)]
+        [ProducesResponseType(typeof(ResponseCommon<Order>), 201)]
+        [ProducesResponseType(typeof(ResponseCommon<string>), 400)]
+        [ProducesResponseType(typeof(ResponseCommon<string>), 404)]
+        [ProducesResponseType(typeof(string), 500)]
         public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
             _logger.LogInformation("Creating a new order");

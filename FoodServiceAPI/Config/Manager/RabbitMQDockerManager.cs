@@ -1,8 +1,6 @@
 ﻿using Docker.DotNet.Models;
 using Docker.DotNet;
-using Microsoft.AspNetCore.Hosting;
 using System.Diagnostics;
-using System;
 
 namespace FoodServiceAPI.Config.Manager
 {
