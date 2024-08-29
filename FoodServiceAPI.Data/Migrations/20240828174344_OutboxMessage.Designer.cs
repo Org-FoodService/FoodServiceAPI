@@ -4,6 +4,7 @@ using FoodServiceAPI.Data.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodServiceAPI.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240828174344_OutboxMessage")]
+    partial class OutboxMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,7 +193,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 1,
                             Description = "Fresh and ripe, our tomatoes are harvested at the peak of perfection, ensuring unmatched flavor and quality.",
-                            ExpirationDate = new DateTime(2024, 9, 4, 17, 49, 37, 384, DateTimeKind.Local).AddTicks(2395),
+                            ExpirationDate = new DateTime(2024, 9, 4, 14, 43, 43, 15, DateTimeKind.Local).AddTicks(7649),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Tomato",
@@ -201,7 +204,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 2,
                             Description = "Our lettuces are carefully grown, offering a crisp texture and a light flavor that perfectly complements any salad.",
-                            ExpirationDate = new DateTime(2024, 9, 2, 17, 49, 37, 384, DateTimeKind.Local).AddTicks(2420),
+                            ExpirationDate = new DateTime(2024, 9, 2, 14, 43, 43, 15, DateTimeKind.Local).AddTicks(7680),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lettuce",
@@ -212,7 +215,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 3,
                             Description = "Our chicken breasts are boneless and carefully prepared to ensure tender, juicy meat, perfect for a variety of dishes.",
-                            ExpirationDate = new DateTime(2024, 8, 31, 17, 49, 37, 384, DateTimeKind.Local).AddTicks(2423),
+                            ExpirationDate = new DateTime(2024, 8, 31, 14, 43, 43, 15, DateTimeKind.Local).AddTicks(7683),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Chicken Breast",
@@ -223,7 +226,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 4,
                             Description = "Our cheddar cheese is aged with care to develop its rich, creamy flavor, adding an irresistible touch to any dish.",
-                            ExpirationDate = new DateTime(2024, 9, 7, 17, 49, 37, 384, DateTimeKind.Local).AddTicks(2426),
+                            ExpirationDate = new DateTime(2024, 9, 7, 14, 43, 43, 15, DateTimeKind.Local).AddTicks(7687),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Cheese",
@@ -234,7 +237,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 5,
                             Description = "Our fresh onions are hand-selected to ensure consistent quality and flavor, adding robust, aromatic taste to any dish.",
-                            ExpirationDate = new DateTime(2024, 9, 4, 17, 49, 37, 384, DateTimeKind.Local).AddTicks(2431),
+                            ExpirationDate = new DateTime(2024, 9, 4, 14, 43, 43, 15, DateTimeKind.Local).AddTicks(7691),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Onion",
@@ -245,7 +248,7 @@ namespace FoodServiceAPI.Data.Migrations
                         {
                             Id = 6,
                             Description = "Our fresh lemons are harvested at their peak of freshness, offering a citrusy, refreshing flavor that elevates any beverage or dish.",
-                            ExpirationDate = new DateTime(2024, 9, 7, 17, 49, 37, 384, DateTimeKind.Local).AddTicks(2434),
+                            ExpirationDate = new DateTime(2024, 9, 7, 14, 43, 43, 15, DateTimeKind.Local).AddTicks(7694),
                             Image = "https://i.imgur.com/dNT5NsS.jpg",
                             IsFresh = true,
                             Name = "Lemon",
@@ -262,9 +265,6 @@ namespace FoodServiceAPI.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int?>("ClientUserId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TableId")
                         .HasColumnType("int");
 
@@ -272,8 +272,6 @@ namespace FoodServiceAPI.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("OrderId");
-
-                    b.HasIndex("ClientUserId");
 
                     b.HasIndex("TableId");
 
@@ -293,7 +291,7 @@ namespace FoodServiceAPI.Data.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -309,29 +307,6 @@ namespace FoodServiceAPI.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderItem");
-                });
-
-            modelBuilder.Entity("FoodService.Models.Entities.OutboxMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte[]>("Message")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<bool>("Processed")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OutboxMessage");
                 });
 
             modelBuilder.Entity("FoodService.Models.Entities.Product", b =>
@@ -566,7 +541,7 @@ namespace FoodServiceAPI.Data.Migrations
                             DangerColor = "#8E291F",
                             DarkColor = "#412D2C",
                             GreenColor = "#376B4C",
-                            LastUpdate = new DateTime(2024, 8, 28, 17, 49, 37, 384, DateTimeKind.Local).AddTicks(3991),
+                            LastUpdate = new DateTime(2024, 8, 28, 14, 43, 43, 15, DateTimeKind.Local).AddTicks(8451),
                             PrimaryColor = "#AA2E26",
                             SecondaryColor = "#FB9F3A",
                             ServiceName = "FoodService",
@@ -593,6 +568,29 @@ namespace FoodServiceAPI.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tables");
+                });
+
+            modelBuilder.Entity("FoodServiceApi.Data.Messaging.OutboxMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Message")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("Processed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OutboxMessage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -714,16 +712,12 @@ namespace FoodServiceAPI.Data.Migrations
 
             modelBuilder.Entity("FoodService.Models.Entities.Order", b =>
                 {
-                    b.HasOne("FoodService.Models.Auth.User.ClientUser", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("ClientUserId");
-
                     b.HasOne("FoodService.Models.Entities.Table", null)
                         .WithMany("Orders")
                         .HasForeignKey("TableId");
 
-                    b.HasOne("FoodService.Models.Auth.User.UserBase", "User")
-                        .WithMany()
+                    b.HasOne("FoodService.Models.Auth.User.ClientUser", "User")
+                        .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -733,15 +727,19 @@ namespace FoodServiceAPI.Data.Migrations
 
             modelBuilder.Entity("FoodService.Models.Entities.OrderItem", b =>
                 {
-                    b.HasOne("FoodService.Models.Entities.Order", null)
+                    b.HasOne("FoodService.Models.Entities.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FoodService.Models.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });

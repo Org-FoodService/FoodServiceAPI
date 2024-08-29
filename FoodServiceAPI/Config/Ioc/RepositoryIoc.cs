@@ -16,6 +16,7 @@ namespace FoodServiceAPI.Config.Ioc
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ISiteSettingsRepository, SiteSettingsRepository>();
         }

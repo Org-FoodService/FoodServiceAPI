@@ -4,8 +4,6 @@ using FoodService.Models.Responses;
 using FoodServiceAPI.Core.Command.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace FoodServiceAPI.Controllers
 {
@@ -63,26 +61,29 @@ namespace FoodServiceAPI.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(ResponseCommon<Order>), 200)]
-        public async Task<IActionResult> CreateOrder(Order order)
+        public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
             _logger.LogInformation("Creating a new order");
 
-            // Ensure OrderItems have reference to Order
-            foreach (var item in order.OrderItems)
+            try
             {
-                item.Order = order;
+                var response = await _orderCommand.CreateOrder(orderDto);
+                if (response.IsSuccess)
+                {
+                    _logger.LogInformation($"Order created successfully with ID: {response.Data.OrderId}");
+                    return CreatedAtAction(nameof(GetOrderById), new { id = response.Data.OrderId }, response.Data);
+                }
+                else
+                {
+                    _logger.LogError($"Failed to create order, Error: {response.Message}");
+                    return StatusCode(response.StatusCode, response.Message);
+                }
             }
 
-            var response = await _orderCommand.CreateOrder(order);
-            if (response.IsSuccess)
+            catch (Exception ex)
             {
-                _logger.LogInformation($"Order created successfully with ID: {response.Data.OrderId}");
-                return CreatedAtAction(nameof(GetOrderById), new { id = response.Data.OrderId }, response.Data);
-            }
-            else
-            {
-                _logger.LogError($"Failed to create order, Error: {response.Message}");
-                return StatusCode(response.StatusCode, response.Message);
+                _logger.LogError($"Failed to create order, Error: {ex.Message}");
+                return StatusCode(500, "An error occurred while creating the order.");
             }
         }
 

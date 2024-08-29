@@ -14,9 +14,10 @@ namespace FoodServiceAPI.Config.Ioc
         /// <param name="services">The service collection.</param>
         public static void ConfigureServiceIoc(this IServiceCollection services)
         {
-            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<ISiteSettingsService, SiteSettingsService>();
         }
     }

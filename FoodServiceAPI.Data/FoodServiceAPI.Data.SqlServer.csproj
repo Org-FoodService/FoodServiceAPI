@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="FoodService.Models" Version="1.1.6" />
+		<PackageReference Include="FoodService.Models" Version="1.1.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
@@ -20,9 +20,11 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.5.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\FoodServiceApi.Data.Messaging\FoodServiceApi.Data.Messaging.csproj" />
 	  <ProjectReference Include="..\FoodServiceAPI.Shared\FoodServiceAPI.Shared.csproj" />
 	</ItemGroup>
 </Project>
