@@ -13,7 +13,7 @@ namespace FoodServiceAPI.Core.Identity
         private string subject = "";
         private string issuer = "";
         private string audience = "";
-        private readonly Dictionary<string, string> claims = [];
+        private readonly Dictionary<string, string> claims = new Dictionary<string, string>();
         private int expiryInMinutes = 30;
 
         /// <summary>
@@ -117,16 +117,17 @@ namespace FoodServiceAPI.Core.Identity
         {
             EnsureArguments();
 
-            var claims = new List<Claim>
+            var claimsList = new List<Claim>
             {
                 new(JwtRegisteredClaimNames.Sub, subject),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }.Union(this.claims.Select(item => new Claim(item.Key, item.Value)));
+            };
+            claimsList.AddRange(claims.Select(item => new Claim(item.Key, item.Value)));
 
             var token = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
-                claims: claims,
+                claims: claimsList,
                 expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
                 signingCredentials: new SigningCredentials(
                     securityKey,

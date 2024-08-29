@@ -39,7 +39,7 @@ namespace FoodServiceAPI.Core.Service
             if (Ingredient == null)
                 return false;
 
-            return await _repository.DeleteAsync(Ingredient);
+            return await _repository.DeleteAsync(Ingredient, id);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace FoodServiceAPI.Core.Service
             existingIngredient.Description = ingredient.Description;
             existingIngredient.Image = ingredient.Image;
 
-            await _repository.UpdateAsync(existingIngredient);
+            await _repository.UpdateAsync(existingIngredient, ingredient.Id);
             return existingIngredient;
         }
     }

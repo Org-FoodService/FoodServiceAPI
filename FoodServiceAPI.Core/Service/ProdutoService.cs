@@ -42,7 +42,7 @@ namespace FoodServiceAPI.Core.Service
             if (product == null)
                 return false;
 
-            return await _repository.DeleteAsync(product);
+            return await _repository.DeleteAsync(product, product.Id);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace FoodServiceAPI.Core.Service
             existingProduct.Type = product.Type;
             existingProduct.Active = product.Active;
 
-            await _repository.UpdateAsync(existingProduct);
+            await _repository.UpdateAsync(existingProduct, existingProduct.Id);
             return existingProduct;
         }
     }

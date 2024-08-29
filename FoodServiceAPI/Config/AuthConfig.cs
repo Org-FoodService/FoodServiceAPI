@@ -15,8 +15,8 @@ namespace FoodServiceAPI.Config
         /// Configures authentication services.
         /// </summary>
         /// <param name="services">The service collection.</param>
-        /// <param name="builder">The web application builder.</param>
-        public static void ConfigureAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
+        /// <param name="configuration">The configuration.</param>
+        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
             {
@@ -31,13 +31,13 @@ namespace FoodServiceAPI.Config
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["ValidIssuer"],
+                    ValidIssuer = configuration["ValidIssuer"],
 
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration["ValidAudience"],
+                    ValidAudience = configuration["ValidAudience"],
 
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Secret"]!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Secret"]!)),
 
                     ValidateLifetime = true
                 };
@@ -51,30 +51,23 @@ namespace FoodServiceAPI.Config
         /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task AddAdminRole(this IServiceScope scope)
         {
-            try
+            // Obtain the role manager service
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+
+            // Check if the "Admin" role already exists
+            var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
+
+            if (!adminRoleExists)
             {
-                // Obtain the role manager service
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-
-                // Check if the "Admin" role already exists
-                var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
-
-                if (!adminRoleExists)
+                // Create a new instance of the "ApplicationRole" class
+                var adminRole = new ApplicationRole
                 {
-                    // Create a new instance of the "ApplicationRole" class
-                    var adminRole = new ApplicationRole
-                    {
-                        Name = "Admin",
-                        NormalizedName = "ADMIN"
-                    };
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                };
 
-                    // Create the "Admin" role
-                    await roleManager.CreateAsync(adminRole);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Create the "Admin" role
+                await roleManager.CreateAsync(adminRole);
             }
         }
 
@@ -85,30 +78,23 @@ namespace FoodServiceAPI.Config
         /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task AddEmployeeRole(this IServiceScope scope)
         {
-            try
+            // Obtain the role manager service
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+
+            // Check if the "Employee" role already exists
+            var employeeRoleExists = await roleManager.RoleExistsAsync("Employee");
+
+            if (!employeeRoleExists)
             {
-                // Obtain the role manager service
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-
-                // Check if the "Employee" role already exists
-                var employeeRoleExists = await roleManager.RoleExistsAsync("Employee");
-
-                if (!employeeRoleExists)
+                // Create a new instance of the "ApplicationRole" class
+                var employeeRole = new ApplicationRole
                 {
-                    // Create a new instance of the "ApplicationRole" class
-                    var employeeRole = new ApplicationRole
-                    {
-                        Name = "Employee",
-                        NormalizedName = "EMPLOYEE"
-                    };
+                    Name = "Employee",
+                    NormalizedName = "EMPLOYEE"
+                };
 
-                    // Create the "Employee" role
-                    await roleManager.CreateAsync(employeeRole);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Create the "Employee" role
+                await roleManager.CreateAsync(employeeRole);
             }
         }
     }

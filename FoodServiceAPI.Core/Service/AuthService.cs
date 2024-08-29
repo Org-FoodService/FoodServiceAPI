@@ -2,9 +2,9 @@
 using FoodService.Models.Auth.User;
 using FoodService.Models.Dto;
 using FoodServiceAPI.Core.Service.Interface;
+using FoodServiceAPI.Core.Wrapper.Interface;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -19,16 +19,13 @@ namespace FoodServiceAPI.Core.Service
     /// <summary>
     /// Service implementation for authentication-related operations.
     /// </summary>
-    /// <remarks>
-    /// Initializes a new instance of the AuthService class.
-    /// </remarks>
     public class AuthService : IAuthService
     {
         private readonly ILogger<AuthService> _logger;
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserManager<UserBase> _userManager;
+        private readonly IUserManagerWrapper<UserBase> _userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
@@ -36,13 +33,13 @@ namespace FoodServiceAPI.Core.Service
         /// <param name="logger">Logger instance.</param>
         /// <param name="userRepository">User repository instance.</param>
         /// <param name="configuration">Configuration instance.</param>
-        /// <param name="userManager">User manager instance.</param>
+        /// <param name="userManager">User manager wrapper instance.</param>
         /// <param name="httpContextAccessor">HTTP context accessor instance.</param>
         public AuthService(
             ILogger<AuthService> logger,
             IUserRepository userRepository,
             IConfiguration configuration,
-            UserManager<UserBase> userManager,
+            IUserManagerWrapper<UserBase> userManager,
             IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
@@ -121,7 +118,7 @@ namespace FoodServiceAPI.Core.Service
                 ClientUser findUser = await _userRepository.GetByIdAsync(user.Id) ?? throw new ArgumentException("User not found.");
                 findUser.Email = user.Email;
                 findUser.UserName = user.UserName;
-                return await _userRepository.UpdateAsync(findUser);
+                return await _userRepository.UpdateAsync(findUser, findUser.Id);
             }
             catch (Exception ex)
             {
@@ -140,7 +137,7 @@ namespace FoodServiceAPI.Core.Service
             try
             {
                 ClientUser findUser = await _userRepository.GetByIdAsync(userId) ?? throw new ArgumentException("User not found.");
-                await _userRepository.DeleteAsync(findUser);
+                await _userRepository.DeleteAsync(findUser, findUser.Id);
                 return true;
             }
             catch (Exception ex)
@@ -185,7 +182,7 @@ namespace FoodServiceAPI.Core.Service
                         throw new ArgumentException("User registration failed.");
 
                 // If this is the first user, add admin role
-                var isFirstUser = await _userManager.Users.CountAsync() == 1;
+                var isFirstUser = await _userManager.CountUsersAsync() == 1;
                 if (isFirstUser)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, "Admin");
@@ -228,14 +225,14 @@ namespace FoodServiceAPI.Core.Service
                 UserBase user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new ArgumentException("User not found.");
                 await _userManager.AddToRoleAsync(user, roleName);
 
-                if (propertyInfos != null)
-                {
-                    // Iterate over the boolean properties and set them to true for the user
-                    foreach (var property in propertyInfos)
-                    {
-                        property.SetValue(user, true);
-                    }
-                }
+                //if (propertyInfos != null)
+                //{
+                //    // Iterate over the boolean properties and set them to true for the user
+                //    foreach (var property in propertyInfos)
+                //    {
+                //        property.SetValue(property, true);
+                //    }
+                //}
 
                 // Update the user in the database
                 await _userManager.UpdateAsync(user);
@@ -283,7 +280,6 @@ namespace FoodServiceAPI.Core.Service
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
-
 
                 return new SsoDto(new JwtSecurityTokenHandler().WriteToken(token), expiresTime, userRolesList, user);
             }
