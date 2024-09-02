@@ -7,5 +7,6 @@ namespace FoodServiceAPI.Data.SqlServer.Repository.Interface
     /// </summary>
     public interface IOrderRepository : IGenericRepository<Order, int>
     {
+        Task<Order> CreateOrderWithTransactionAsync(Order order);
     }
 }

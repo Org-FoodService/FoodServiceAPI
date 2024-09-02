@@ -8,18 +8,12 @@ namespace FoodServiceAPI.Core.Service
     /// <summary>
     /// Service implementation for product-related operations.
     /// </summary>
-    public class ProductService : IProductService
+    /// <remarks>
+    /// Initializes a new instance of the ProductService class.
+    /// </remarks>
+    /// <param name="repository">The product repository.</param>
+    public class ProductService(IProductRepository repository) : IProductService
     {
-        private readonly IProductRepository _repository;
-
-        /// <summary>
-        /// Initializes a new instance of the ProductService class.
-        /// </summary>
-        /// <param name="repository">The product repository.</param>
-        public ProductService(IProductRepository repository)
-        {
-            _repository = repository;
-        }
 
         /// <summary>
         /// Creates a new product asynchronously.
@@ -28,7 +22,7 @@ namespace FoodServiceAPI.Core.Service
         /// <returns>The created product.</returns>
         public async Task<Product> CreateProductAsync(Product product)
         {
-            return await _repository.CreateAsync(product);
+            return await repository.CreateAsync(product);
         }
 
         /// <summary>
@@ -38,11 +32,11 @@ namespace FoodServiceAPI.Core.Service
         /// <returns>True if deletion is successful, otherwise false.</returns>
         public async Task<bool> DeleteProductAsync(int id)
         {
-            var product = await _repository.GetByIdAsync(id);
+            var product = await repository.GetByIdAsync(id);
             if (product == null)
                 return false;
 
-            return await _repository.DeleteAsync(product);
+            return await repository.DeleteAsync(product, product.Id);
         }
 
         /// <summary>
@@ -51,7 +45,7 @@ namespace FoodServiceAPI.Core.Service
         /// <returns>A list of all products.</returns>
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await _repository.ListAll().ToListAsync();
+            return await repository.ListAll().ToListAsync();
         }
 
         /// <summary>
@@ -61,7 +55,17 @@ namespace FoodServiceAPI.Core.Service
         /// <returns>The retrieved product.</returns>
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            return await repository.GetByIdAsync(id);
+        }
+
+        /// <summary>
+        /// Retrieves a product by its ID asynchronously, including the list of ingredients.
+        /// </summary>
+        /// <param name="id">The ID of the product to retrieve.</param>
+        /// <returns>The retrieved product, including its ingredients.</returns>
+        public async Task<Product> GetProductByIdIncludingIngredientsAsync(int id)
+        {
+            return await repository.GetByIdAsync(id, include: p => p.Include(p => p.ProductIngredients).ThenInclude(pi => pi.Ingredient));
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace FoodServiceAPI.Core.Service
         /// <returns>The updated product, or null if the product does not exist.</returns>
         public async Task<Product?> UpdateProductAsync(Product product)
         {
-            var existingProduct = await _repository.GetByIdAsync(product.Id);
+            var existingProduct = await repository.GetByIdAsync(product.Id);
             if (existingProduct == null)
                 return null;
 
@@ -80,7 +84,7 @@ namespace FoodServiceAPI.Core.Service
             existingProduct.Type = product.Type;
             existingProduct.Active = product.Active;
 
-            await _repository.UpdateAsync(existingProduct);
+            await repository.UpdateAsync(existingProduct, existingProduct.Id);
             return existingProduct;
         }
     }

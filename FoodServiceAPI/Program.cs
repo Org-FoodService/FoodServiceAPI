@@ -8,8 +8,11 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Start the docker container for serilog sink.
+// Start the docker container for Serilog sink
 await SerilogSeqDockerManager.ValidateDockerContainer();
+
+// Start the docker container for RabbitMQ
+await RabbitMQDockerManager.ValidateDockerContainer();
 
 // Get the database connection string from appsettings.json
 string? sqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -18,12 +21,14 @@ string? sqlConnection = builder.Configuration.GetConnectionString("DefaultConnec
 builder.Services.ConfigureDatabase(sqlConnection!);
 builder.Services.UpdateMigrationDatabase();
 
-builder.Services.ConfigureAuthentication(builder);
+builder.Services.ConfigureAuthentication(builder.Configuration);
 
 // Add IOC
 builder.Services.ConfigureRepositoryIoc();
+builder.Services.ConfigureMessagingIoc();
 builder.Services.ConfigureServiceIoc();
 builder.Services.ConfigureCommandIoc();
+builder.Services.ConfigureWrapperIoc();
 
 // Add HealthCheck
 builder.Services.AddHealthChecks();

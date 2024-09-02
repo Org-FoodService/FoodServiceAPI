@@ -10,24 +10,16 @@ namespace FoodServiceAPI.Controllers
     /// <summary>
     /// Controller for authentication-related operations.
     /// </summary>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="AuthController"/> class.
+    /// </remarks>
+    /// <param name="authCommand">The authentication command service.</param>
+    /// <param name="logger">The logger.</param>
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(IAuthCommand authCommand, ILogger<AuthController> logger) : ControllerBase
     {
-        private readonly IAuthCommand _authCommand;
-        private readonly ILogger<AuthController> _logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AuthController"/> class.
-        /// </summary>
-        /// <param name="authCommand">The authentication command service.</param>
-        /// <param name="logger">The logger.</param>
-        public AuthController(IAuthCommand authCommand, ILogger<AuthController> logger)
-        {
-            _authCommand = authCommand;
-            _logger = logger;
-        }
 
         /// <summary>
         /// Registers a new user.
@@ -39,16 +31,16 @@ namespace FoodServiceAPI.Controllers
         [ProducesResponseType(typeof(ResponseCommon<bool>), 200)]
         public async Task<ActionResult> SignUp([FromBody] SignUpDto signUpDto)
         {
-            _logger.LogInformation("Attempting to sign up user...");
-            var response = await _authCommand.SignUp(signUpDto);
+            logger.LogInformation("Attempting to sign up user...");
+            var response = await authCommand.SignUp(signUpDto);
             if (response.IsSuccess)
             {
-                _logger.LogInformation("User signed up successfully.");
+                logger.LogInformation("User signed up successfully.");
                 return Ok(response.Data);
             }
             else
             {
-                _logger.LogError($"Failed to sign up user: {response.Message}");
+                logger.LogError($"Failed to sign up user: {response.Message}");
                 return StatusCode(response.StatusCode, response.Message);
             }
         }
@@ -63,16 +55,16 @@ namespace FoodServiceAPI.Controllers
         [ProducesResponseType(typeof(ResponseCommon<SsoDto>), 200)]
         public async Task<ActionResult> SignIn([FromBody] SignInDto signInDTO)
         {
-            _logger.LogInformation("Attempting to sign in user...");
-            var response = await _authCommand.SignIn(signInDTO);
+            logger.LogInformation("Attempting to sign in user...");
+            var response = await authCommand.SignIn(signInDTO);
             if (response.IsSuccess)
             {
-                _logger.LogInformation("User signed in successfully.");
+                logger.LogInformation("User signed in successfully.");
                 return Ok(response.Data);
             }
             else
             {
-                _logger.LogError($"Failed to sign in user: {response.Message}");
+                logger.LogError($"Failed to sign in user: {response.Message}");
                 return StatusCode(response.StatusCode, response.Message);
             }
         }
@@ -87,16 +79,16 @@ namespace FoodServiceAPI.Controllers
         [ProducesResponseType(typeof(ResponseCommon<bool>), 200)]
         public async Task<ActionResult> AddUserToAdminRole([FromBody] int userId)
         {
-            _logger.LogInformation($"Attempting to add user {userId} to admin role...");
-            var response = await _authCommand.AddUserToAdminRole(userId);
+            logger.LogInformation($"Attempting to add user {userId} to admin role...");
+            var response = await authCommand.AddUserToAdminRole(userId);
             if (response.IsSuccess)
             {
-                _logger.LogInformation($"User {userId} added to admin role successfully.");
+                logger.LogInformation($"User {userId} added to admin role successfully.");
                 return Ok(response.Data);
             }
             else
             {
-                _logger.LogError($"Failed to add user {userId} to admin role: {response.Message}");
+                logger.LogError($"Failed to add user {userId} to admin role: {response.Message}");
                 return StatusCode(response.StatusCode, response.Message);
             }
         }
@@ -109,16 +101,16 @@ namespace FoodServiceAPI.Controllers
         [ProducesResponseType(typeof(ResponseCommon<UserBase>), 200)]
         public async Task<ActionResult> GetCurrentUser()
         {
-            _logger.LogInformation("Attempting to get current user...");
-            var response = await _authCommand.GetCurrentUser();
+            logger.LogInformation("Attempting to get current user...");
+            var response = await authCommand.GetCurrentUser();
             if (response.IsSuccess)
             {
-                _logger.LogInformation("Current user retrieved successfully.");
+                logger.LogInformation("Current user retrieved successfully.");
                 return Ok(response.Data);
             }
             else
             {
-                _logger.LogError($"Failed to get current user: {response.Message}");
+                logger.LogError($"Failed to get current user: {response.Message}");
                 return StatusCode(response.StatusCode, response.Message);
             }
         }
@@ -132,16 +124,16 @@ namespace FoodServiceAPI.Controllers
         [ProducesResponseType(typeof(ResponseCommon<List<ClientUser>>), 200)]
         public async Task<ActionResult> ListUsers()
         {
-            _logger.LogInformation("Attempting to list users...");
-            var response = await _authCommand.ListUsers();
+            logger.LogInformation("Attempting to list users...");
+            var response = await authCommand.ListUsers();
             if (response.IsSuccess)
             {
-                _logger.LogInformation("Users listed successfully.");
+                logger.LogInformation("Users listed successfully.");
                 return Ok(response.Data);
             }
             else
             {
-                _logger.LogError($"Failed to list users: {response.Message}");
+                logger.LogError($"Failed to list users: {response.Message}");
                 return StatusCode(response.StatusCode, response.Message);
             }
         }
@@ -155,16 +147,16 @@ namespace FoodServiceAPI.Controllers
         [ProducesResponseType(typeof(ResponseCommon<UserDto>), 200)]
         public async Task<ActionResult> GetUserDto([FromQuery] int id)
         {
-            _logger.LogInformation($"Attempting to get user with ID: {id}...");
-            var response = await _authCommand.GetUserDto(id);
+            logger.LogInformation($"Attempting to get user with ID: {id}...");
+            var response = await authCommand.GetUserDto(id);
             if (response.IsSuccess)
             {
-                _logger.LogInformation($"User with ID: {id} retrieved successfully.");
+                logger.LogInformation($"User with ID: {id} retrieved successfully.");
                 return Ok(response.Data);
             }
             else
             {
-                _logger.LogError($"Failed to get user with ID {id}: {response.Message}");
+                logger.LogError($"Failed to get user with ID {id}: {response.Message}");
                 return StatusCode(response.StatusCode, response.Message);
             }
         }

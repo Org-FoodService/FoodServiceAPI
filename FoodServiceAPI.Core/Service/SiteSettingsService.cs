@@ -25,7 +25,7 @@ namespace FoodServiceAPI.Core.Service
         /// Retrieves a siteSettings by its ID asynchronously.
         /// </summary>
         /// <returns>The retrieved siteSettings.</returns>
-        public async Task<SiteSettings> GetSiteSettingsAsync()
+        public async Task<SiteSettings?> GetSiteSettingsAsync()
         {
             _logger.LogInformation("Attempting to retrieve site settings.");
             var siteSettings = await _repository.GetByIdAsync(1);
@@ -63,7 +63,7 @@ namespace FoodServiceAPI.Core.Service
             existingSiteSettings.SecondaryColor = siteSettings.SecondaryColor;
             existingSiteSettings.BackgroundColor = siteSettings.BackgroundColor;
 
-            await _repository.UpdateAsync(existingSiteSettings);
+            await _repository.UpdateAsync(existingSiteSettings, existingSiteSettings.Id);
             _logger.LogInformation("Site settings updated successfully.");
             return existingSiteSettings;
         }

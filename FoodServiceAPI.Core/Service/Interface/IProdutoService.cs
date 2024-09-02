@@ -1,5 +1,4 @@
-﻿using FoodService.Models;
-using FoodService.Models.Entities;
+﻿using FoodService.Models.Entities;
 
 namespace FoodServiceAPI.Core.Service.Interface
 {
@@ -17,6 +16,13 @@ namespace FoodServiceAPI.Core.Service.Interface
         /// Retrieves a product by its ID asynchronously.
         /// </summary>
         Task<Product> GetProductByIdAsync(int id);
+
+        /// <summary>
+        /// Retrieves a product by its ID including Ingredients entities asynchronously
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Product> GetProductByIdIncludingIngredientsAsync(int id);
 
         /// <summary>
         /// Creates a new product asynchronously.

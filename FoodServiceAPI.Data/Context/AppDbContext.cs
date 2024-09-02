@@ -143,6 +143,11 @@ namespace FoodServiceAPI.Data.SqlServer.Context
         public DbSet<Table> Tables { get; set; }
 
         /// <summary>
+        /// Represents the outboxMessages in the database.
+        /// </summary>
+        public DbSet<OutboxMessage> OutboxMessage { get; set; }
+
+        /// <summary>
         /// Represents the site settings in the database.
         /// </summary>
         public DbSet<SiteSettings> SiteSettings { get; set; }
