@@ -31,7 +31,7 @@ namespace FoodServiceAPI.Data.SqlServer.Repository
                     await _context.SaveChangesAsync();
 
                     // Prepare the message for RabbitMQ (Outbox Pattern)
-                    var message = new { createdOrder.Entity.OrderId, Status = "Created" };
+                    var message = new { createdOrder.Entity.Id, Status = "Created" };
                     var messageBody = JsonConvert.SerializeObject(message);
 
                     // Save the message to the Outbox table

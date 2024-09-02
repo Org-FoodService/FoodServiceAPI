@@ -10,17 +10,12 @@ namespace FoodServiceAPI.Core.Service
     /// <summary>
     /// Service implementation for order-related operations.
     /// </summary>
-    public class OrderService : IOrderService
+    /// <remarks>
+    /// Initializes a new instance of the ProductService class.
+    /// </remarks>
+    /// <param name="repository">The product repository.</param>
+    public class OrderService(IOrderRepository repository) : IOrderService
     {
-        private readonly IOrderRepository _repository;
-        /// <summary>
-        /// Initializes a new instance of the ProductService class.
-        /// </summary>
-        /// <param name="repository">The product repository.</param>
-        public OrderService(IOrderRepository repository, IAuthService authService)
-        {
-            _repository = repository;
-        }
 
         /// <summary>
         /// Creates a new order asynchronously.
@@ -47,37 +42,37 @@ namespace FoodServiceAPI.Core.Service
                 );
             }
 
-            return await _repository.CreateOrderWithTransactionAsync(orderResult);
+            return await repository.CreateOrderWithTransactionAsync(orderResult);
         }
 
         public async Task<bool> DeleteOrder(int id)
         {
-            var order = await _repository.GetByIdAsync(id);
+            var order = await repository.GetByIdAsync(id);
             if (order == null)
                 return false;
 
-            return await _repository.DeleteAsync(order, order.OrderId);
+            return await repository.DeleteAsync(order, order.Id);
         }
 
         public async Task<List<Order>> GetAllOrder()
         {
-            return await _repository.ListAll().ToListAsync();
+            return await repository.ListAll().ToListAsync();
         }
 
         public async Task<Order> GetOrderById(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            return await repository.GetByIdAsync(id);
         }
 
         public async Task<Order?> UpdateOrder(Order Order)
         {
-            var existingOrder = await _repository.GetByIdAsync(Order.OrderId);
+            var existingOrder = await repository.GetByIdAsync(Order.Id);
             if (existingOrder == null)
                 return null;
 
             existingOrder.OrderItems = Order.OrderItems;
 
-            await _repository.UpdateAsync(existingOrder, existingOrder.OrderId);
+            await repository.UpdateAsync(existingOrder, existingOrder.Id);
             return existingOrder;
         }
     }

@@ -1,4 +1,6 @@
-﻿using FoodService.Models.Entities;
+﻿using FoodService.Models.Auth.User;
+using FoodService.Models.Dto;
+using FoodService.Models.Entities;
 using FoodService.Models.Responses;
 using FoodServiceApi.Tests.Utility;
 using FoodServiceAPI.Core.Command.Interface;
@@ -13,9 +15,9 @@ namespace FoodServiceApi.Tests.TestHelper
     [ExcludeFromCodeCoverage]
     public static class OrderTestHelper
     {
-        public static readonly Order Order = new Order
+        public static readonly Order Order = new()
         {
-            OrderId = 1,
+            Id = 1,
             OrderItems = new List<OrderItem>
             {
                 new OrderItem
@@ -23,17 +25,32 @@ namespace FoodServiceApi.Tests.TestHelper
                     Id = 2,
                     ProductId = 1,
                     Quantity = 2,
-                    Order = new Order
-                    {
-                        OrderId = 1
-                    },
                     Comment = "Extra cheese",
-                    OrderId = 1,
                     Product = new Product
                     {
                         Id = 1,
-                        Name = "Pizza"
+                        Name = "Pizza",
+                        ProductIngredients = new()
+                        {
+                            new()
+                            {
+                                IngredientId = 1,
+                                ProductId = 1
+                            }
+                        }
                     }
+                }
+            }
+        };
+        public static readonly OrderDto OrderDto = new()
+        {
+            OrderItems = new List<OrderItemDto>
+            {
+                new OrderItemDto
+                {
+                    ProductId = 1,
+                    Quantity = 2,
+                    Comment = "Extra cheese",
                 }
             }
         };
@@ -50,9 +67,9 @@ namespace FoodServiceApi.Tests.TestHelper
             mockOrderCommand.Setup(x => x.GetOrderById(id)).ReturnsAsync(response);
         }
 
-        public static void SetupCreateOrderCommand(this Mock<IOrderCommand> mockOrderCommand, Order order, ResponseCommon<Order> response)
+        public static void SetupCreateOrderCommand(this Mock<IOrderCommand> mockOrderCommand, OrderDto orderDto, ResponseCommon<Order> response)
         {
-            mockOrderCommand.Setup(x => x.CreateOrder(order)).ReturnsAsync(response);
+            mockOrderCommand.Setup(x => x.CreateOrder(orderDto)).ReturnsAsync(response);
         }
 
         public static void SetupUpdateOrderCommand(this Mock<IOrderCommand> mockOrderCommand, int id, Order order, ResponseCommon<Order?> response)
@@ -81,7 +98,7 @@ namespace FoodServiceApi.Tests.TestHelper
 
         public static void SetupCreateOrderService(this Mock<IOrderService> mockOrderService, Order createdOrder)
         {
-            mockOrderService.Setup(x => x.CreateOrder(It.IsAny<Order>())).ReturnsAsync(createdOrder);
+            mockOrderService.Setup(x => x.CreateOrder(It.IsAny<OrderDto>(), It.IsAny<UserBase>())).ReturnsAsync(createdOrder);
         }
 
         public static void SetupUpdateOrderService(this Mock<IOrderService> mockOrderService, Order updatedOrder)
@@ -106,7 +123,7 @@ namespace FoodServiceApi.Tests.TestHelper
 
         public static void SetupGetByIdOrderRepository(this Mock<IOrderRepository> mockOrderRepository, int id, Order? order)
         {
-            mockOrderRepository.Setup(x => x.GetByIdAsync(id))!.ReturnsAsync(order);
+            mockOrderRepository.Setup(x => x.GetByIdAsync(id, null))!.ReturnsAsync(order);
         }
 
         public static void SetupCreateOrderRepository(this Mock<IOrderRepository> mockOrderRepository, Order order, Order createdOrder)
@@ -116,12 +133,12 @@ namespace FoodServiceApi.Tests.TestHelper
 
         public static void SetupUpdateOrderRepository(this Mock<IOrderRepository> mockOrderRepository, Order order, int result)
         {
-            mockOrderRepository.Setup(x => x.UpdateAsync(order, order.OrderId)).ReturnsAsync(result);
+            mockOrderRepository.Setup(x => x.UpdateAsync(order, order.Id)).ReturnsAsync(result);
         }
 
         public static void SetupDeleteOrderRepository(this Mock<IOrderRepository> mockOrderRepository, Order order, bool result)
         {
-            mockOrderRepository.Setup(x => x.DeleteAsync(order, order.OrderId)).ReturnsAsync(result);
+            mockOrderRepository.Setup(x => x.DeleteAsync(order, order.Id)).ReturnsAsync(result);
         }
 
         private static DbSet<T> MockDbSet<T>(List<T> sourceList) where T : class

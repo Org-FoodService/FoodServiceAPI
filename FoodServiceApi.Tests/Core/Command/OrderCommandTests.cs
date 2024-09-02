@@ -1,6 +1,8 @@
-﻿using FoodService.Models.Entities;
+﻿using FoodService.Models.Dto;
+using FoodService.Models.Entities;
 using FoodServiceApi.Tests.TestHelper;
 using FoodServiceAPI.Core.Command;
+using FoodServiceAPI.Core.Service;
 using FoodServiceAPI.Core.Service.Interface;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
@@ -11,12 +13,20 @@ namespace FoodServiceApi.Tests.Core.Command
     public class OrderCommandTests
     {
         private readonly Mock<IOrderService> _mockOrderService;
+        private readonly Mock<IAuthService> _mockAuthService;
+        private readonly Mock<IProductService> _mockProductService;
+        private readonly Mock<IIngredientService> _mockIngredientService;
+
         private readonly OrderCommand _orderCommand;
 
         public OrderCommandTests()
         {
             _mockOrderService = new Mock<IOrderService>();
-            _orderCommand = new OrderCommand(_mockOrderService.Object);
+            _mockAuthService = new Mock<IAuthService>();
+            _mockProductService = new Mock<IProductService>();
+            _mockIngredientService = new Mock<IIngredientService>();
+
+            _orderCommand = new OrderCommand(_mockOrderService.Object, _mockAuthService.Object, _mockProductService.Object, _mockIngredientService.Object);
         }
 
         [Fact(DisplayName = "GetAllOrders - Success - Returns list of orders")]
@@ -39,10 +49,10 @@ namespace FoodServiceApi.Tests.Core.Command
         {
             // Arrange
             var order = OrderTestHelper.Order;
-            _mockOrderService.SetupGetOrderByIdService(order.OrderId, order);
+            _mockOrderService.SetupGetOrderByIdService(order.Id, order);
 
             // Act
-            var result = await _orderCommand.GetOrderById(order.OrderId);
+            var result = await _orderCommand.GetOrderById(order.Id);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -53,11 +63,11 @@ namespace FoodServiceApi.Tests.Core.Command
         public async Task GetOrderById_Failure_OrderNotFound()
         {
             // Arrange
-            var nonExistentOrderId = 999;
-            _mockOrderService.SetupGetOrderByIdService(nonExistentOrderId, null);
+            var nonExistentId = 999;
+            _mockOrderService.SetupGetOrderByIdService(nonExistentId, null);
 
             // Act
-            var result = await _orderCommand.GetOrderById(nonExistentOrderId);
+            var result = await _orderCommand.GetOrderById(nonExistentId);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -72,25 +82,25 @@ namespace FoodServiceApi.Tests.Core.Command
             // Arrange
             var createdOrder = OrderTestHelper.Order;
             _mockOrderService.SetupCreateOrderService(createdOrder);
-            _mockOrderService.SetupGetOrderByIdService(createdOrder.OrderId, createdOrder);
+            _mockOrderService.SetupGetOrderByIdService(createdOrder.Id, createdOrder);
 
             // Act
-            var result = await _orderCommand.CreateOrder(createdOrder);
+            var result = await _orderCommand.CreateOrder(new());
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(createdOrder.OrderId, result.Data.OrderId);
+            Assert.Equal(createdOrder.Id, result.Data.Id);
         }
 
         [Fact(DisplayName = "CreateOrder - Failure - Returns error response")]
         public async Task CreateOrder_Failure_ReturnsErrorResponse()
         {
             // Arrange
-            var newOrder = new Order { OrderId = 2 };
+            var newOrder = OrderTestHelper.Order;
             _mockOrderService.SetupCreateOrderService(newOrder);
 
             // Act
-            var result = await _orderCommand.CreateOrder(newOrder);
+            var result = await _orderCommand.CreateOrder(new());
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -106,24 +116,24 @@ namespace FoodServiceApi.Tests.Core.Command
             _mockOrderService.SetupUpdateOrderService(updatedOrder);
 
             // Act
-            var result = await _orderCommand.UpdateOrder(updatedOrder.OrderId, updatedOrder);
+            var result = await _orderCommand.UpdateOrder(updatedOrder.Id, updatedOrder);
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(updatedOrder.OrderId, result.Data?.OrderId);
+            Assert.Equal(updatedOrder.Id, result.Data?.Id);
             Assert.Equal(updatedOrder.OrderItems.First().Comment, result.Data!.OrderItems.First().Comment);
 
         }
 
         [Fact(DisplayName = "UpdateOrder - Failure - Order ID mismatch")]
-        public async Task UpdateOrder_Failure_OrderIdMismatch()
+        public async Task UpdateOrder_Failure_IdMismatch()
         {
             // Arrange
             var orderToUpdate = OrderTestHelper.Order;
-            var incorrectOrderId = orderToUpdate.OrderId + 1;
+            var incorrectId = orderToUpdate.Id + 1;
 
             // Act
-            var result = await _orderCommand.UpdateOrder(incorrectOrderId, orderToUpdate);
+            var result = await _orderCommand.UpdateOrder(incorrectId, orderToUpdate);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -135,12 +145,12 @@ namespace FoodServiceApi.Tests.Core.Command
         public async Task DeleteOrder_Success_ReturnsTrue()
         {
             // Arrange
-            var orderId = OrderTestHelper.Order.OrderId;
-            _mockOrderService.SetupGetOrderByIdService(orderId, OrderTestHelper.Order); // Ensure order exists
-            _mockOrderService.SetupDeleteOrderService(orderId, true);
+            var Id = OrderTestHelper.Order.Id;
+            _mockOrderService.SetupGetOrderByIdService(Id, OrderTestHelper.Order); // Ensure order exists
+            _mockOrderService.SetupDeleteOrderService(Id, true);
 
             // Act
-            var result = await _orderCommand.DeleteOrder(orderId);
+            var result = await _orderCommand.DeleteOrder(Id);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -152,11 +162,11 @@ namespace FoodServiceApi.Tests.Core.Command
         public async Task DeleteOrder_Failure_OrderNotFound()
         {
             // Arrange
-            var nonExistentOrderId = 999;
-            _mockOrderService.SetupGetOrderByIdService(nonExistentOrderId, null);
+            var nonExistentId = 999;
+            _mockOrderService.SetupGetOrderByIdService(nonExistentId, null);
 
             // Act
-            var result = await _orderCommand.DeleteOrder(nonExistentOrderId);
+            var result = await _orderCommand.DeleteOrder(nonExistentId);
 
             // Assert
             Assert.False(result.IsSuccess);

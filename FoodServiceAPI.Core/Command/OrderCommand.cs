@@ -57,7 +57,7 @@ namespace FoodServiceAPI.Core.Command
             // Validate product and ingredient availability
             foreach (var item in orderDto.OrderItems)
             {
-                var product = await _productService.GetProductByIdAsync(item.ProductId);
+                var product = await _productService.GetProductByIdIncludingIngredientsAsync(item.ProductId);
 
                 if (product == null)
                 {
@@ -70,7 +70,7 @@ namespace FoodServiceAPI.Core.Command
                 }
 
                 // Validate ingredient availability
-                foreach (var productIngredient in product.ProductIngredients ?? new List<ProductIngredient>())
+                foreach (var productIngredient in product.ProductIngredients ?? [])
                 {
                     var ingredient = productIngredient.Ingredient;
 
@@ -99,7 +99,7 @@ namespace FoodServiceAPI.Core.Command
             // Now proceed with creating the order
             var createdOrder = await _orderService.CreateOrder(orderDto, currentUser);
 
-            return await GetOrderById(createdOrder.OrderId);
+            return await GetOrderById(createdOrder.Id);
         }
 
 
@@ -111,7 +111,7 @@ namespace FoodServiceAPI.Core.Command
         /// <returns>A response containing the updated Order.</returns>
         public async Task<ResponseCommon<Order?>> UpdateOrder(int id, Order Order)
         {
-            if (id != Order.OrderId)
+            if (id != Order.Id)
             {
                 return ResponseCommon<Order?>.Failure("The Order ID in the URL does not match the Order ID in the request body", 400);
             }

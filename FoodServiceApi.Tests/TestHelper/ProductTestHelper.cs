@@ -95,7 +95,7 @@ namespace FoodServiceApi.Tests.TestHelper
 
         public static void SetupGetByIdProductRepository(this Mock<IProductRepository> mockProductRepository, int id, Product? product)
         {
-            mockProductRepository.Setup(x => x.GetByIdAsync(id))!.ReturnsAsync(product);
+            mockProductRepository.Setup(x => x.GetByIdAsync(id, null))!.ReturnsAsync(product);
         }
 
         public static void SetupCreateProductRepository(this Mock<IProductRepository> mockProductRepository, Product product, Product createdProduct)

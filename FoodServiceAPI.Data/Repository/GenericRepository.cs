@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using FoodServiceAPI.Data.SqlServer.Context;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FoodServiceAPI.Data.SqlServer.Repository
 {
@@ -60,7 +63,6 @@ namespace FoodServiceAPI.Data.SqlServer.Repository
             return result;
         }
 
-
         /// <summary>
         /// Deletes an entity asynchronously.
         /// </summary>
@@ -105,19 +107,24 @@ namespace FoodServiceAPI.Data.SqlServer.Repository
         /// <summary>
         /// Retrieves an entity by its ID asynchronously.
         /// </summary>
-        public virtual async Task<T> GetByIdAsync(TKey id)
+        /// <param name="id">The ID of the entity to retrieve.</param>
+        /// <param name="include">The include expression for related entities.</param>
+        /// <returns>The retrieved entity, including its related entities.</returns>
+        public virtual async Task<T> GetByIdAsync(TKey id, Func<IQueryable<T>, IQueryable<T>>? include = null)
         {
             _logger.LogInformation("Retrieving an entity asynchronously by ID: {Id}.", id);
-            T entity = (await _context.Set<T>().FindAsync(id))!;
-            if (entity == null)
+
+            IQueryable<T> query = _context.Set<T>();
+
+            if (include != null)
             {
-                _logger.LogWarning("Entity not found for ID: {Id}.", id);
-                throw new KeyNotFoundException($"Entity not found for ID: {id}");
+                query = include(query);
             }
-            else
-            {
-                _logger.LogInformation("Entity retrieved successfully for ID: {Id}.", id);
-            }
+
+            T entity = await query.FirstOrDefaultAsync(e => EF.Property<TKey>(e, "Id").Equals(id))
+                        ?? throw new KeyNotFoundException($"Entity not found for ID: {id}");
+
+            _logger.LogInformation("Entity retrieved successfully for ID: {Id}.", id);
             return entity;
         }
 

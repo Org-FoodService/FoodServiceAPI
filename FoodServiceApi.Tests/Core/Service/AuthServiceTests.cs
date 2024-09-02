@@ -49,9 +49,9 @@ namespace FoodServiceApi.Tests.Core.Service
             _mockUserRepository.Setup(repo => repo.ListAll()).Returns(new TestAsyncEnumerable<ClientUser>(users));
 
             if (!userFound)
-                _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))!.ReturnsAsync((ClientUser?)null);
+                _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), null))!.ReturnsAsync((ClientUser?)null);
             else
-                _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))!.ReturnsAsync(users.First());
+                _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), null))!.ReturnsAsync(users.First());
 
             _mockUserRepository.Setup(repo => repo.UpdateAsync(It.IsAny<ClientUser>(), It.IsAny<int>())).ReturnsAsync(1);
             _mockUserRepository.Setup(repo => repo.DeleteAsync(It.IsAny<ClientUser>(), It.IsAny<int>())).ReturnsAsync(true);
@@ -60,7 +60,7 @@ namespace FoodServiceApi.Tests.Core.Service
         private void SetupUserRepositoryToThrowException()
         {
             _mockUserRepository.Setup(repo => repo.ListAll()).Throws(new Exception("Test exception"));
-            _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception("Test exception"));
+            _mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<int>(), null)).ThrowsAsync(new Exception("Test exception"));
         }
 
 

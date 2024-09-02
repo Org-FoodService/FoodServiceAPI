@@ -4,6 +4,7 @@ using FoodServiceAPI.Data.SqlServer.Repository.Interface;
 using Moq;
 using FoodServiceApi.Tests.TestHelper;
 using System.Diagnostics.CodeAnalysis;
+using FoodService.Models.Auth.User;
 
 namespace FoodServiceApi.Tests.Core.Service
 {
@@ -24,26 +25,27 @@ namespace FoodServiceApi.Tests.Core.Service
         {
             // Arrange
             var newOrder = OrderTestHelper.Order;
+            var orderDto = OrderTestHelper.OrderDto;
             _mockOrderRepository.SetupCreateOrderRepository(newOrder, newOrder);
 
             // Act
-            var result = await _orderService.CreateOrder(newOrder);
+            var result = await _orderService.CreateOrder(orderDto, new() { CpfCnpj = ""});
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(newOrder.OrderId, result.OrderId);
+            Assert.Equal(newOrder.Id, result.Id);
         }
 
         [Fact(DisplayName = "DeleteOrder - Success - Returns true")]
         public async Task DeleteOrder_Success_ReturnsTrue()
         {
             // Arrange
-            var orderId = OrderTestHelper.Order.OrderId;
-            _mockOrderRepository.SetupGetByIdOrderRepository(orderId, OrderTestHelper.Order);
+            var Id = OrderTestHelper.Order.Id;
+            _mockOrderRepository.SetupGetByIdOrderRepository(Id, OrderTestHelper.Order);
             _mockOrderRepository.SetupDeleteOrderRepository(OrderTestHelper.Order, true);
 
             // Act
-            var result = await _orderService.DeleteOrder(orderId);
+            var result = await _orderService.DeleteOrder(Id);
 
             // Assert
             Assert.True(result);
@@ -53,11 +55,11 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task DeleteOrder_Failure_OrderNotFound()
         {
             // Arrange
-            var nonExistentOrderId = 999;
-            _mockOrderRepository.SetupGetByIdOrderRepository(nonExistentOrderId, null);
+            var nonExistentId = 999;
+            _mockOrderRepository.SetupGetByIdOrderRepository(nonExistentId, null);
 
             // Act
-            var result = await _orderService.DeleteOrder(nonExistentOrderId);
+            var result = await _orderService.DeleteOrder(nonExistentId);
 
             // Assert
             Assert.False(result);
@@ -82,26 +84,26 @@ namespace FoodServiceApi.Tests.Core.Service
         public async Task GetOrderById_Success_ReturnsOrder()
         {
             // Arrange
-            var orderId = OrderTestHelper.Order.OrderId;
-            _mockOrderRepository.SetupGetByIdOrderRepository(orderId, OrderTestHelper.Order);
+            var Id = OrderTestHelper.Order.Id;
+            _mockOrderRepository.SetupGetByIdOrderRepository(Id, OrderTestHelper.Order);
 
             // Act
-            var result = await _orderService.GetOrderById(orderId);
+            var result = await _orderService.GetOrderById(Id);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(orderId, result.OrderId);
+            Assert.Equal(Id, result.Id);
         }
 
         [Fact(DisplayName = "GetOrderById - Failure - Order not found")]
         public async Task GetOrderById_Failure_OrderNotFound()
         {
             // Arrange
-            var nonExistentOrderId = 999;
-            _mockOrderRepository.SetupGetByIdOrderRepository(nonExistentOrderId, null);
+            var nonExistentId = 999;
+            _mockOrderRepository.SetupGetByIdOrderRepository(nonExistentId, null);
 
             // Act
-            var result = await _orderService.GetOrderById(nonExistentOrderId);
+            var result = await _orderService.GetOrderById(nonExistentId);
 
             // Assert
             Assert.Null(result);
@@ -113,7 +115,7 @@ namespace FoodServiceApi.Tests.Core.Service
             // Arrange
             var updatedOrder = OrderTestHelper.Order;
             updatedOrder.OrderItems = new List<OrderItem> { new OrderItem { Comment = "newComment" } };
-            _mockOrderRepository.SetupGetByIdOrderRepository(updatedOrder.OrderId, OrderTestHelper.Order);
+            _mockOrderRepository.SetupGetByIdOrderRepository(updatedOrder.Id, OrderTestHelper.Order);
             _mockOrderRepository.SetupUpdateOrderRepository(updatedOrder, 1);
 
             // Act
@@ -121,7 +123,7 @@ namespace FoodServiceApi.Tests.Core.Service
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(updatedOrder.OrderId, result.OrderId);
+            Assert.Equal(updatedOrder.Id, result.Id);
             Assert.Equal(updatedOrder.OrderItems.First().Comment, result.OrderItems.First().Comment);
         }
 
@@ -130,7 +132,7 @@ namespace FoodServiceApi.Tests.Core.Service
         {
             // Arrange
             var updatedOrder = OrderTestHelper.Order;
-            _mockOrderRepository.SetupGetByIdOrderRepository(updatedOrder.OrderId, null);
+            _mockOrderRepository.SetupGetByIdOrderRepository(updatedOrder.Id, null);
 
             // Act
             var result = await _orderService.UpdateOrder(updatedOrder);

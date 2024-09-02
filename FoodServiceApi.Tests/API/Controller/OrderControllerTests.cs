@@ -64,10 +64,10 @@ namespace FoodServiceApi.Tests.API.Controller
             // Arrange
             var order = OrderTestHelper.Order;
             var response = ResponseCommon<Order>.Success(order);
-           _mockOrderCommand.SetupGetOrderByIdCommand(order.OrderId, response);
+           _mockOrderCommand.SetupGetOrderByIdCommand(order.Id, response);
 
             // Act
-            var result = await _controller.GetOrderById(order.OrderId);
+            var result = await _controller.GetOrderById(order.Id);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
@@ -94,30 +94,32 @@ namespace FoodServiceApi.Tests.API.Controller
         public async Task CreateOrder_Success_ReturnsCreatedAtAction()
         {
             // Arrange
+            var orderDto = OrderTestHelper.OrderDto;
             var order = OrderTestHelper.Order;
             var response = ResponseCommon<Order>.Success(order);
-           _mockOrderCommand.SetupCreateOrderCommand(order, response);
+           _mockOrderCommand.SetupCreateOrderCommand(orderDto, response);
 
             // Act
-            var result = await _controller.CreateOrder(order);
+            var result = await _controller.CreateOrder(orderDto);
 
             // Assert
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(order, createdAtActionResult.Value);
             Assert.Equal(nameof(_controller.GetOrderById), createdAtActionResult.ActionName);
-            Assert.Equal(order.OrderId, createdAtActionResult.RouteValues!["id"]);
+            Assert.Equal(order.Id, createdAtActionResult.RouteValues!["id"]);
         }
 
         [Fact(DisplayName = "CreateOrder - Failure - Returns Status Code")]
         public async Task CreateOrder_Failure_ReturnsStatusCode()
         {
             // Arrange
+            var orderDto = OrderTestHelper.OrderDto;
             var order = OrderTestHelper.Order;
             var response = ResponseCommon<Order>.Failure("Failed to create order", 400);
-           _mockOrderCommand.SetupCreateOrderCommand(order, response);
+           _mockOrderCommand.SetupCreateOrderCommand(orderDto, response);
 
             // Act
-            var result = await _controller.CreateOrder(order);
+            var result = await _controller.CreateOrder(orderDto);
 
             // Assert
             var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -131,10 +133,10 @@ namespace FoodServiceApi.Tests.API.Controller
             // Arrange
             var order = OrderTestHelper.Order;
             var response = ResponseCommon<Order>.Success(order);
-           _mockOrderCommand.SetupUpdateOrderCommand(order.OrderId, order, response!);
+           _mockOrderCommand.SetupUpdateOrderCommand(order.Id, order, response!);
 
             // Act
-            var result = await _controller.UpdateOrder(order.OrderId, order);
+            var result = await _controller.UpdateOrder(order.Id, order);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
@@ -147,10 +149,10 @@ namespace FoodServiceApi.Tests.API.Controller
             // Arrange
             var order = OrderTestHelper.Order;
             var response = ResponseCommon<Order>.Failure("Failed to update order", 400);
-           _mockOrderCommand.SetupUpdateOrderCommand(order.OrderId, order, response!);
+           _mockOrderCommand.SetupUpdateOrderCommand(order.Id, order, response!);
 
             // Act
-            var result = await _controller.UpdateOrder(order.OrderId, order);
+            var result = await _controller.UpdateOrder(order.Id, order);
 
             // Assert
             var statusCodeResult = Assert.IsType<ObjectResult>(result);
