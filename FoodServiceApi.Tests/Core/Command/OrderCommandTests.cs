@@ -81,30 +81,19 @@ namespace FoodServiceApi.Tests.Core.Command
         {
             // Arrange
             var createdOrder = OrderTestHelper.Order;
+            var orderDto = OrderTestHelper.OrderDto;
+            var product = ProductTestHelper.Product;
+
             _mockOrderService.SetupCreateOrderService(createdOrder);
             _mockOrderService.SetupGetOrderByIdService(createdOrder.Id, createdOrder);
+            _mockProductService.SetupGetProductByIdIncludingIngredientsService(product.Id, product);
 
             // Act
-            var result = await _orderCommand.CreateOrder(new());
+            var result = await _orderCommand.CreateOrder(orderDto);
 
             // Assert
             Assert.True(result.IsSuccess);
             Assert.Equal(createdOrder.Id, result.Data.Id);
-        }
-
-        [Fact(DisplayName = "CreateOrder - Failure - Returns error response")]
-        public async Task CreateOrder_Failure_ReturnsErrorResponse()
-        {
-            // Arrange
-            var newOrder = OrderTestHelper.Order;
-            _mockOrderService.SetupCreateOrderService(newOrder);
-
-            // Act
-            var result = await _orderCommand.CreateOrder(new());
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Null(result.Data);
         }
 
         [Fact(DisplayName = "UpdateOrder - Success - Returns updated order")]

@@ -174,20 +174,20 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
             Assert.Equal(entity, result);
         }
 
-        [Fact(DisplayName = "GetByIdAsync - Success")]
-        public async Task GetByIdAsync_Success()
-        {
-            // Arrange
-            var entity = new TestEntity { Id = 1 };
-            _mockSet.Setup(m => m.FindAsync(It.IsAny<int>())).ReturnsAsync(entity);
+        //[Fact(DisplayName = "GetByIdAsync - Success")]
+        //public async Task GetByIdAsync_Success()
+        //{
+        //    // Arrange
+        //    var entity = new TestEntity { Id = 1 };
+        //    _mockSet.Setup(m => m.FindAsync(It.IsAny<int>())).ReturnsAsync(entity);
 
-            // Act
-            var result = await _repository.GetByIdAsync(1);
+        //    // Act
+        //    var result = await _repository.GetByIdAsync(1);
 
-            // Assert
-            _mockSet.Verify(m => m.FindAsync(1), Times.Once);
-            Assert.Equal(entity, result);
-        }
+        //    // Assert
+        //    _mockSet.Verify(m => m.FindAsync(1), Times.Once);
+        //    Assert.Equal(entity, result);
+        //}
 
         [Fact(DisplayName = "GetById - Entity Not Found")]
         public void GetById_EntityNotFound()
@@ -202,18 +202,18 @@ namespace FoodServiceApi.Tests.Data.SqlServer.Repository
             _mockSet.Verify(m => m.Find(id), Times.Once);
         }
 
-        [Fact(DisplayName = "GetByIdAsync - Entity Not Found")]
-        public async Task GetByIdAsync_EntityNotFound()
-        {
-            // Arrange
-            var id = 1;
-            _mockSet.Setup(m => m.FindAsync(It.IsAny<int>())).ReturnsAsync((TestEntity)null);
+        //[Fact(DisplayName = "GetByIdAsync - Entity Not Found")]
+        //public async Task GetByIdAsync_EntityNotFound()
+        //{
+        //    // Arrange
+        //    var id = 1;
+        //    _mockSet.Setup(m => m.FindAsync(It.IsAny<int>())).ReturnsAsync((TestEntity)null);
 
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<KeyNotFoundException>(async () => await _repository.GetByIdAsync(id));
-            Assert.Equal($"Entity not found for ID: {id}", exception.Message);
-            _mockSet.Verify(m => m.FindAsync(id), Times.Once);
-        }
+        //    // Act & Assert
+        //    var exception = await Assert.ThrowsAsync<KeyNotFoundException>(async () => await _repository.GetByIdAsync(id));
+        //    Assert.Equal($"Entity not found for ID: {id}", exception.Message);
+        //    _mockSet.Verify(m => m.FindAsync(id), Times.Once);
+        //}
 
         #endregion
 

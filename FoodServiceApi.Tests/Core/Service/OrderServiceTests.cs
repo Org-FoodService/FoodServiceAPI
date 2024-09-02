@@ -26,7 +26,7 @@ namespace FoodServiceApi.Tests.Core.Service
             // Arrange
             var newOrder = OrderTestHelper.Order;
             var orderDto = OrderTestHelper.OrderDto;
-            _mockOrderRepository.SetupCreateOrderRepository(newOrder, newOrder);
+            _mockOrderRepository.SetupCreateOrderWithTransactionRepository(newOrder);
 
             // Act
             var result = await _orderService.CreateOrder(orderDto, new() { CpfCnpj = ""});

@@ -13,7 +13,7 @@ namespace FoodServiceApi.Tests.TestHelper
     [ExcludeFromCodeCoverage]
     public static class ProductTestHelper
     {
-        public static readonly Product Product = new Product
+        public static readonly Product Product = new()
         {
             Id = 1,
             Active = true,
@@ -22,7 +22,23 @@ namespace FoodServiceApi.Tests.TestHelper
             Price = 10.50,
             Brand = "Test Brand",
             Image = "Test Image",
-            //ProductIngredients = new List<ProductIngredient>() { new() { IngredientId = 1, ProductId = 1} },
+            ProductIngredients =
+            [
+                new()
+                {
+                    IngredientId = 1,
+                    Ingredient = new()
+                    {
+                        Description = "",
+                        ShortDescription = "",
+                        IsFresh = true,
+                        ExpirationDate = new DateTime(),
+                        Image = "",
+                        Name = "",
+                        StockQuantity = 1000
+                    },ProductId = 1
+                }
+            ],
             ShortDescription = "Test Short Description",
             Type = FoodService.Models.Enum.ProductTypeEnum.Beverage
         };
@@ -58,6 +74,7 @@ namespace FoodServiceApi.Tests.TestHelper
 
         #region Setup Methods Service
 
+
         public static void SetupGetAllProductService(this Mock<IProductService> mockProductService, List<Product> products)
         {
             mockProductService.Setup(x => x.GetAllProductsAsync()).ReturnsAsync(products);
@@ -66,6 +83,10 @@ namespace FoodServiceApi.Tests.TestHelper
         public static void SetupGetProductByIdService(this Mock<IProductService> mockProductService, int id, Product? product)
         {
             mockProductService.Setup(x => x.GetProductByIdAsync(id))!.ReturnsAsync(product);
+        }
+        public static void SetupGetProductByIdIncludingIngredientsService(this Mock<IProductService> mockProductService, int id, Product? product)
+        {
+            mockProductService.Setup(x => x.GetProductByIdIncludingIngredientsAsync(id))!.ReturnsAsync(product);
         }
 
         public static void SetupCreateProductService(this Mock<IProductService> mockProductService, Product createdProduct)

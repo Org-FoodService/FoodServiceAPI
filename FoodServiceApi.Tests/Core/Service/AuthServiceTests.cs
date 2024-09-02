@@ -163,7 +163,7 @@ namespace FoodServiceApi.Tests.Core.Service
         {
             // Arrange
             var user = ClientUser;
-            SetupUserRepository(new List<ClientUser> { user }, true);
+            SetupUserRepository([user], true);
 
             // Act
             var result = await _authService.GetUserById(user.Id);

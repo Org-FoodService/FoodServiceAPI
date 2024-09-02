@@ -26,19 +26,7 @@ namespace FoodServiceApi.Tests.TestHelper
                     ProductId = 1,
                     Quantity = 2,
                     Comment = "Extra cheese",
-                    Product = new Product
-                    {
-                        Id = 1,
-                        Name = "Pizza",
-                        ProductIngredients = new()
-                        {
-                            new()
-                            {
-                                IngredientId = 1,
-                                ProductId = 1
-                            }
-                        }
-                    }
+                    Product = ProductTestHelper.Product
                 }
             }
         };
@@ -129,6 +117,11 @@ namespace FoodServiceApi.Tests.TestHelper
         public static void SetupCreateOrderRepository(this Mock<IOrderRepository> mockOrderRepository, Order order, Order createdOrder)
         {
             mockOrderRepository.Setup(x => x.CreateAsync(order)).ReturnsAsync(createdOrder);
+        }
+
+        public static void SetupCreateOrderWithTransactionRepository(this Mock<IOrderRepository> mockOrderRepository, Order createdOrder)
+        {
+            mockOrderRepository.Setup(x => x.CreateOrderWithTransactionAsync(It.IsAny<Order>())).ReturnsAsync(createdOrder);
         }
 
         public static void SetupUpdateOrderRepository(this Mock<IOrderRepository> mockOrderRepository, Order order, int result)
